@@ -69,6 +69,8 @@
 @layer base {
   * {
     @apply border-border;
+    @apply w-full;
+    @apply w-full;
   }
   body {
     @apply bg-background text-foreground;
