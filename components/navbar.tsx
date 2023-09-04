@@ -4,11 +4,11 @@ import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 const NavBar = ()=> {
   return (
-   <div className="w-full h-50 px-2">
-        <ul className="flex justify-center items-center gap-2">
-            <li>
-                <div className="w-50 h-50">
-                    <Image src="/vercel.svg" alt="logo" width="10" height="10" />
+   <div className="w-full h-50 p-2 px-10">
+        <ul className="flex justify-center items-center gap-4">
+            <li className="w-fit">
+                <div className="w-52 h-fit">
+                    <Image src="/logo.svg" alt="logo" width="10" height="20" />
                 </div>
             </li>
             <li className="w-fit">
@@ -16,12 +16,12 @@ const NavBar = ()=> {
                 <Link href="#">About</Link>
             </div>
             </li>
-            <li>
+            <li className=" md:w-full w-98">
                 <Input type="search" placeholder="Search..."/>
             </li>
-            <li className="flex gap-1">
-                <Button variant="outline">Signup</Button>
-                <Button>Login</Button>
+            <li className="flex gap-1 justify-end w-fit">
+                <Button  className="w-20">Login</Button>
+                <Button variant="secondary" className="w-20">Signup</Button>
             </li>
         </ul>
 
