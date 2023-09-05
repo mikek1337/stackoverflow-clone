@@ -1,10 +1,11 @@
 import NavBar from "@/components/navbar";
 import "./globals.css";
 import type { Metadata } from "next";
-import { DM_Sans } from "next/font/google";
+import { Inter } from "next/font/google";
 import Providers from "@/components/providers";
+import { Toaster } from "@/components/ui/toaster";
 
-const dmSans = DM_Sans({
+const inter = Inter({
   subsets: ["latin"],
 });
 
@@ -20,13 +21,14 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={dmSans.className}>
+      <body className={inter.className}>
         <Providers>
           <div className="container">
             <NavBar />
             {children}
           </div>
         </Providers>
+        <Toaster/>
       </body>
     </html>
   );
