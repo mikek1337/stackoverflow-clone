@@ -4,6 +4,7 @@ import { buttonVariants } from "@/components/ui/button";
 import Link from "next/link";
 import { ChevronLeft } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Icons } from "@/components/icons";
 const page: FC = () => {
   return (
     <div className="absolute inset-0">
@@ -18,7 +19,7 @@ const page: FC = () => {
           <ChevronLeft className="mr-2 h-4 w-4" />
           Home
         </Link>
-
+        
         <Login />
       </div>
     </div>

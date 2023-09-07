@@ -3,9 +3,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { Input } from "./ui/input";
 import { buttonVariants } from "./ui/button";
+import { cn } from "@/lib/utils";
 const NavBar = () => {
   return (
-    <div className="container pt-2">
+    <div className="pt-2">
       <ul className="flex justify-center items-center gap-4">
         <li className="w-fit ">
           <div className="w-40 h-fit">
