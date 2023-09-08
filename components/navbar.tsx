@@ -4,7 +4,11 @@ import Link from "next/link";
 import { Input } from "./ui/input";
 import { buttonVariants } from "./ui/button";
 import { cn } from "@/lib/utils";
+import { useSession } from "next-auth/react";
+import { UserAccountNav } from "./usernavmenu";
+
 const NavBar = () => {
+  const { data } = useSession();
   return (
     <div className="pt-2">
       <ul className="flex justify-center items-center gap-4">
@@ -21,10 +25,27 @@ const NavBar = () => {
         <li className=" md:w-full w-20">
           <Input type="search" placeholder="Search..." />
         </li>
-        <li className="flex gap-1 justify-end w-fit">
-            <Link href="/login" className={buttonVariants({variant:'default'})}>Login</Link>
-            <Link href="/signup" className={buttonVariants({variant:'ghost'})}>SignUp</Link>
-        </li>
+        {!data && 
+          <li className="flex gap-1 justify-end w-fit">
+            <Link
+              href="/login"
+              className={buttonVariants({ variant: "default" })}
+            >
+              Login
+            </Link>
+            <Link
+              href="/signup"
+              className={buttonVariants({ variant: "ghost" })}
+            >
+              SignUp
+            </Link>
+          </li>
+        }
+        {data && (
+          <li className="self-end">
+            <UserAccountNav user={data.user}/>
+          </li>
+        )}
       </ul>
     </div>
   );
