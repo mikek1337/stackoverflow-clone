@@ -1,4 +1,3 @@
-"use client";
 import Image from "next/image";
 import Link from "next/link";
 import { Input } from "./ui/input";
@@ -6,11 +5,12 @@ import { buttonVariants } from "./ui/button";
 import { cn } from "@/lib/utils";
 import { useSession } from "next-auth/react";
 import { UserAccountNav } from "./usernavmenu";
+import { getAuthSession } from "@/lib/auth";
 
-const NavBar = () => {
-  const { data } = useSession();
+const NavBar = async () => {
+  const  data =  await getAuthSession();
   return (
-    <div className="pt-2">
+    <div className="pt-2 border-b-2 w-full">
       <ul className="flex justify-center items-center gap-4">
         <li className="w-fit ">
           <div className="w-40 h-fit">
@@ -42,9 +42,9 @@ const NavBar = () => {
           </li>
         }
         {data && (
-          <li className="self-end">
-            <UserAccountNav user={data.user}/>
-          </li>
+          <div className="w-fit">
+            <UserAccountNav user={data.user} className="float-right w-fit"/>
+          </div>
         )}
       </ul>
     </div>

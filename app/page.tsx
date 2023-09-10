@@ -1,5 +1,6 @@
 import Image from "next/image";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
+import Link from "next/link";
 import { cn } from "@/lib/utils";
 
 export default function Home() {
@@ -13,7 +14,7 @@ export default function Home() {
           Every developer data scientist system admin mobile developer game
           developer has a tab open to Stack Overflow
         </p>
-        <Button className={cn("w-[500px] mx-auto ")}>Get Started</Button>
+        <Link href="\questions" className={cn(buttonVariants({variant:'default'}),"w-[500px] mx-auto")}>Get Started</Link>  
       </div>
     </div>
   );
