@@ -1,80 +1,61 @@
-'use client'
-
-import EditorJS from '@editorjs/editorjs';
-import { FC, useCallback, useRef } from 'react'
-import { zodResolver } from '@hookform/resolvers/zod';
-import { PostValidator } from '@/lib/validators/post'
-import {useForm} from 'react-hook-form';
+import EditorJS from "@editorjs/editorjs";
+import { FC, useCallback, forwardRef } from "react";
 import "@/styles/editor.css";
-import { z } from 'zod';
 
-type formData = z.infer<typeof PostValidator>
-
-const editor: FC = () => {
-  const {
-    register,
-    handleSubmit,
-    formState:{errors}
-  } = useForm({
-    resolver: zodResolver(PostValidator),
-    defaultValues:{
-      title:'',
-      problemDetail:null,
-      triedMethods:null,
-      tags:''
-    }
-  });
-
-  const ref = useRef<EditorJS>();
-  const _titleRef = useRef<HTMLTextAreaElement>();
-  const initializeEditor = useCallback(async ()=>{
-    const EditorJS = (await import("@editorjs/editorjs")).default
-    const Header = (await import("@editorjs/header")).default
-    const Code = (await import("@editorjs/code")).default
-    const linkTool = (await import("@editorjs/link")).default
-    const imageTool = (await import("@editorjs/image")).default
-    const Embed = (await import("@editorjs/embed")).default
-    const Table = (await import("@editorjs/table")).default
-    const List = (await import("@editorjs/list")).default
-    const InlineCode = (await import("@editorjs/inline-code"))
-    if(!ref.current){
-      const editor = new EditorJS({
-        holder:'editor',
-        onReady(){
-          ref.current = editor
-        },
-        placeholder: 'problem detail...',
-        inlineToolbar: true,
-        data:{blocks:[]},
-        tools:{
-          header:Header,
-          linkTool:{
-            class: linkTool,
-            config:{
-              endpoint:'/api/link'
-            }
-          },
-          image:{
-            class:imageTool,
-            config:{
-              updloader:{
-
-              }
-            }
-          },
-          list:List,
-          code:Code,
-          inlineCode: InlineCode,
-          table:Table,
-          embed:Embed,
-        },
-      })
-    }
-
-  },[])
-  return (
-    <div id='editor' className='min-h-500'/>
-  )
+interface EditorProps extends React.HTMLAttributes<HTMLDivElement> {
+  refer: React.MutableRefObject<EditorJS | undefined>;
 }
 
-export default editor
+const Editor: FC<EditorProps> = ({ refer, ...props }: EditorProps) => {
+  const initializeEditor = useCallback(async () => {
+    const EditorJS = (await import("@editorjs/editorjs")).default;
+    const Header = (await import("@editorjs/header")).default;
+    const Embed = (await import("@editorjs/embed")).default;
+    const Table = (await import("@editorjs/table")).default;
+    const List = (await import("@editorjs/list")).default;
+    const Code = (await import("@editorjs/code")).default;
+    const LinkTool = (await import("@editorjs/link")).default;
+    const InlineCode = (await import("@editorjs/inline-code")).default;
+    const ImageTool = (await import("@editorjs/image")).default;
+
+    if (!refer.current) {
+      const editor = new EditorJS({
+        holder: props.id || "editor",
+        onReady() {
+          refer.current = editor;
+        },
+        placeholder: "Type here to write your post...",
+        inlineToolbar: true,
+        tools: {
+          header: Header,
+          linkTool: {
+            class: LinkTool,
+            config: {
+              endpoint: "/api/link",
+            },
+          },
+          image: {
+            class: ImageTool,
+            config: {
+              uploader: {
+                async uploadByFile(file: File) {
+                  // upload to uploadthing const [res] = await uploadFiles([file], "imageUploader");
+                  console.log(file);
+                },
+              },
+            },
+          },
+          list: List,
+          code: Code,
+          inlineCode: InlineCode,
+          table: Table,
+          embed: Embed,
+        },
+      });
+    }
+  }, [refer, props.id]);
+  initializeEditor();
+  return <div id={props.id || "editor"} className="focus:border-2 w-auto" />;
+};
+
+export default Editor;
