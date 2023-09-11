@@ -7,7 +7,7 @@ import { useForm } from "react-hook-form";
 import EditorJS from "@editorjs/editorjs";
 import { z } from "zod";
 import { toast } from "@/hooks/use-toast";
-import { buttonVariants } from "./ui/button";
+import { Button, buttonVariants } from "./ui/button";
 import { cn } from "@/lib/utils";
 import Editor from "./editor";
 type formData = z.infer<typeof PostValidator>;
@@ -65,7 +65,7 @@ const QuestionForm = () => {
   const submit = (data: formData) => {
     const { title, tags } = data;
     const problemDetail = problemRef.current?.save();
-    console.log(problemDetail);
+    console.log(title);
   };
 
   const { ref: titleRef, ...rest } = register("title");
@@ -103,7 +103,7 @@ const QuestionForm = () => {
         </div>
         <div className="border-2 rounded-md p-4  mt-5 w-fit">
           <div className="flex flex-col">
-            <label htmlFor="editor" className="font-semibold">
+            <label htmlFor="problemDetail" className="font-semibold">
               What are the details of your problem?
             </label>
             <span className="text-xs">
@@ -116,7 +116,7 @@ const QuestionForm = () => {
         </div>
         <div className="border-2 rounded-md p-4  mt-5 w-fit">
           <div className="flex flex-col">
-            <label htmlFor="editor" className="font-semibold">
+            <label htmlFor="triedMethods" className="font-semibold">
               What did you try and what did you expecting?
             </label>
             <span className="text-xs">
@@ -127,6 +127,28 @@ const QuestionForm = () => {
           <div className=" mt-5 w-[811px]">
             <Editor refer={triedRef} id="triedMethods" />
           </div>
+        </div>
+        <div className="flex flex-col border-2 rounded-md p-4 w-fit mt-5">
+          <label htmlFor="title" className="font-semibold">
+            Tags
+          </label>
+          <span className="text-xs">
+            Add up to 5 tags to describe what your question is about.
+          </span>
+          <div className="w-[811px] mt-3">
+            <Input
+              className="w-full resize-none appearance-none overflow-hidden bg-transparent focus:outline-none"
+              id="tag"
+              placeholder="e.g. Is there an R function for finding the index of an element in a vector?"
+            />
+          </div>
+          <Button
+            type="submit"
+            form="submit-question"
+            className="w-fit float-right mt-3"
+          >
+            submit
+          </Button>
         </div>
       </form>
     </div>

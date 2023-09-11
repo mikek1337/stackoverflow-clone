@@ -1,6 +1,8 @@
+"use client";
 import EditorJS from "@editorjs/editorjs";
-import { FC, useCallback, forwardRef } from "react";
+import { FC, useCallback } from "react";
 import "@/styles/editor.css";
+import { uploadFiles } from "@/lib/uploadthings";
 
 interface EditorProps extends React.HTMLAttributes<HTMLDivElement> {
   refer: React.MutableRefObject<EditorJS | undefined>;
@@ -39,8 +41,16 @@ const Editor: FC<EditorProps> = ({ refer, ...props }: EditorProps) => {
             config: {
               uploader: {
                 async uploadByFile(file: File) {
-                  // upload to uploadthing const [res] = await uploadFiles([file], "imageUploader");
-                  console.log(file);
+                  const [res] = await uploadFiles({
+                    endpoint: "imageUploader",
+                    files: [file],
+                  });
+                  return {
+                    success: 1,
+                    file: {
+                      url: res.url,
+                    },
+                  };
                 },
               },
             },
