@@ -181,7 +181,7 @@ const QuestionForm = () => {
           <div className="w-[811px] mt-3">
             <Input
               className="w-full resize-none appearance-none overflow-hidden bg-transparent focus:outline-none"
-              id="tag"
+              id="tags"
               placeholder="e.g. Is there an R function for finding the index of an element in a vector?"
             />
           </div>

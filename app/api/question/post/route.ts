@@ -9,6 +9,7 @@ export async function POST(req: Request) {
         const body = await req.json();
         const { title, problemDetail, triedMethods, tags } = PostValidator.parse(body);
         if (session?.user) {
+            console.log(title);
             db.question.create({
                 data: {
                     title: title,
@@ -17,7 +18,8 @@ export async function POST(req: Request) {
                     tags: tags,
                     postedBy: session.user.id
                 }
-            });
+            }).then(res => console.log(res))
+                .catch(err => console.log(err));
 
             return new Response("OK");
         }
@@ -29,8 +31,8 @@ export async function POST(req: Request) {
             console.log(error.message)
             return new Response(error.message, { status: 400 });
         }
-      
-       
+
+
         return new Response("Could not post question. Please try again later", {
             status: 500
         });
