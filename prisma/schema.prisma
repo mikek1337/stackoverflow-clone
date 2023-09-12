@@ -52,3 +52,12 @@ model VerificationToken {
 
   @@unique([identifier, token])
 }
+
+model Question {
+  id            String @id @default(auto()) @map("_id") @db.ObjectId
+  title         String
+  problemDetail Json
+  triedMethods  Json
+  tags          String
+  postedBy      String
+}

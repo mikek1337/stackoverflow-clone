@@ -1,5 +1,6 @@
 import Editor from "@/components/editor";
 import QuestionForm from "@/components/questionform";
+import { Button } from "@/components/ui/button";
 import { FC } from "react";
 
 interface pageProps {}
@@ -28,7 +29,9 @@ const page: FC<pageProps> = ({}) => {
           <li>Review your question and post it to the site.</li>
         </ul>
       </div>
+     
       <QuestionForm />
+    
     </div>
   );
 };

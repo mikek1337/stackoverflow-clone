@@ -1,8 +1,10 @@
 "use client";
-import { PostValidator } from "@/lib/validators/post";
+import { PostValidator, PostCreationRequest } from "@/lib/validators/post";
+import { usePathname, useRouter } from "next/navigation";
 import { Input } from "./ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { forwardRef, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import EditorJS from "@editorjs/editorjs";
 import { z } from "zod";
@@ -10,9 +12,12 @@ import { toast } from "@/hooks/use-toast";
 import { Button, buttonVariants } from "./ui/button";
 import { cn } from "@/lib/utils";
 import Editor from "./editor";
+import axios from "axios";
 type formData = z.infer<typeof PostValidator>;
 const QuestionForm = () => {
   const [mounted, setMounted] = useState(false);
+  const pathname = usePathname();
+  const router = useRouter();
   const {
     register,
     handleSubmit,
@@ -30,6 +35,35 @@ const QuestionForm = () => {
   const problemRef = useRef<EditorJS>();
   const triedRef = useRef<EditorJS>();
   const _titleRef = useRef<HTMLElement>();
+  const {mutate: postQuestion, isLoading} = useMutation({
+    mutationFn: async ({
+      title,
+      problemDetail,
+      tags,
+      triedMethods
+
+    }:PostCreationRequest)=>{
+        const payload:PostCreationRequest = {title, problemDetail, triedMethods,tags};
+        const { data } = await axios.post("/api/question/post",payload)
+        
+        return data;
+    },
+    onError:()=>{
+      return toast({
+        title:"Something went wrong!",
+        description: "your question was not posted. Please try again.",
+        variant:"destructive"
+      })
+    },
+    onSuccess:()=>{
+      const newPathname = pathname.split("/").slice(0, -1).join("/");
+      router.push(newPathname);
+      router.refresh()
+      return toast({
+        description:"Your question is posted"
+      });
+    }
+  });
   useEffect(() => {
     if (Object.keys(errors).length) {
       for (const [_key, value] of Object.entries(errors)) {
@@ -61,17 +95,26 @@ const QuestionForm = () => {
     };
   }, [mounted]);
 
-  if (!mounted) return null;
-  const submit = (data: formData) => {
-    const { title, tags } = data;
-    const problemDetail = problemRef.current?.save();
-    console.log(title);
-  };
+  if (!mounted) return null; 
 
   const { ref: titleRef, ...rest } = register("title");
+
+  async function onSubmit(data: formData){
+    const problemDetailBlocks = problemRef.current?.save();
+    const triedMethodsBlocks = triedRef.current?.save();
+    const title = data.title;
+    const tags = data.tags;
+    const payload:PostCreationRequest={
+      title:title,
+      tags:tags,
+      triedMethods:triedMethodsBlocks,
+      problemDetail:problemDetailBlocks
+    }
+    postQuestion(payload);
+  }
   return (
     <div className="my-10">
-      <form onSubmit={handleSubmit(submit)} id="submit-question">
+      <form onSubmit={handleSubmit(onSubmit)} id="submit-question">
         <div className="flex flex-col border-2 rounded-md p-4 w-fit">
           <label htmlFor="title" className="font-semibold">
             Title
