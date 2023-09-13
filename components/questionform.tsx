@@ -104,17 +104,18 @@ const QuestionForm = () => {
   if (!mounted) return null;
 
   async function onSubmit(data: FormData) {
-    const problemDetailBlocks = problemRef.current?.save();
-    const triedMethodsBlocks = triedRef.current?.save();
+    const problemDetailBlocks = await problemRef.current?.save();
+    const triedMethodsBlocks = await triedRef.current?.save();
     const title = data.title;
     const tags = data.tags;
+    
     const payload: PostCreationRequest = {
       title: title,
       tags: tags,
       triedMethods: triedMethodsBlocks,
       problemDetail: problemDetailBlocks,
     };
-
+    console.log(payload,"here");
     postQuestion(payload);
   }
   const { ref: titleRef, ...rest } = register("title");

@@ -10,7 +10,7 @@ export async function POST(req: Request) {
         const { title, problemDetail, triedMethods, tags } = PostValidator.parse(body);
         if (session?.user) {
 
-            db.question.create({
+            await db.question.create({
                 data: {
                     title: title,
                     problemDetail: problemDetail,

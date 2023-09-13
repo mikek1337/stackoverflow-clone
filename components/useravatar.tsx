@@ -5,6 +5,8 @@ import Image from "next/image";
 
 interface UserAvatarProps extends AvatarProps {
   user: Pick<User, "image" | "name">;
+  width?:string;
+  height?:string;
 }
 export function UserAvatar({ user, ...props }: UserAvatarProps) {
   return (
@@ -23,7 +25,7 @@ export function UserAvatar({ user, ...props }: UserAvatarProps) {
           />
         </svg>
       </AvatarFallback>
-      <Image src={user.image || "" } alt={user.name || ""} width="50" height="50"/>
+      <Image src={user.image || "" } alt={user.name || ""} width="10" height="10"/>
     </Avatar>
   );
 }

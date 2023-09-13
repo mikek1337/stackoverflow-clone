@@ -39,14 +39,14 @@ const page: FC = () => {
         </div>
         <div className="w-full my-5">
           <Tabs defaultValue="hot">
-            <TabsList className="w-[300px] float-right">
+            <TabsList className="w-[300px] float-right mb-10">
               <TabsTrigger value="hot">hot</TabsTrigger>
               <TabsTrigger value="new">interesting</TabsTrigger>
               <TabsTrigger value="week">Bountied</TabsTrigger>
               <TabsTrigger value="week">Week</TabsTrigger>
               <TabsTrigger value="month">Month</TabsTrigger>
             </TabsList>
-            <TabsContent value="hot" className="my-5">
+            <TabsContent value="hot">
               <Questions questionType="hot" />
             </TabsContent>
           </Tabs>
