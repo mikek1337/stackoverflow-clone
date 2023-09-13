@@ -1,6 +1,6 @@
 "use client";
 import EditorJS from "@editorjs/editorjs";
-import { FC, useCallback } from "react";
+import { FC, useCallback, useEffect, useState } from "react";
 import "@/styles/editor.css";
 import { uploadFiles } from "@/lib/uploadthings";
 
@@ -9,6 +9,7 @@ interface EditorProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 const Editor: FC<EditorProps> = ({ refer, ...props }: EditorProps) => {
+  const [isMounted, setIsMounted] = useState(false);
   const initializeEditor = useCallback(async () => {
     const EditorJS = (await import("@editorjs/editorjs")).default;
     const Header = (await import("@editorjs/header")).default;
@@ -25,9 +26,11 @@ const Editor: FC<EditorProps> = ({ refer, ...props }: EditorProps) => {
         holder: props.id || "editor",
         onReady() {
           refer.current = editor;
+          console.log(refer);
         },
         placeholder: "Type here to write your post...",
         inlineToolbar: true,
+        data: { blocks: [] },
         tools: {
           header: Header,
           linkTool: {
@@ -64,7 +67,26 @@ const Editor: FC<EditorProps> = ({ refer, ...props }: EditorProps) => {
       });
     }
   }, [refer, props.id]);
-  initializeEditor();
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setIsMounted(true);
+    }
+  }, []);
+  useEffect(() => {
+    const init = async () => {
+      await initializeEditor();
+      console.log(refer);
+    };
+
+    if (isMounted) {
+      init();
+
+      return () => {
+        refer.current?.destroy();
+        refer.current = undefined;
+      };
+    }
+  }, [isMounted, initializeEditor, props.id, refer]);
   return <div id={props.id || "editor"} className="focus:border-2 w-auto" />;
 };
 

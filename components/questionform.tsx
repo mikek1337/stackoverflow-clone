@@ -13,7 +13,7 @@ import { Button, buttonVariants } from "./ui/button";
 import { cn } from "@/lib/utils";
 import Editor from "./editor";
 import axios from "axios";
-type formData = z.infer<typeof PostValidator>;
+type FormData = z.infer<typeof PostValidator>;
 const QuestionForm = () => {
   const [mounted, setMounted] = useState(false);
   const pathname = usePathname();
@@ -22,7 +22,7 @@ const QuestionForm = () => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm({
+  } = useForm<FormData>({
     resolver: zodResolver(PostValidator),
     defaultValues: {
       title: "",
@@ -35,34 +35,40 @@ const QuestionForm = () => {
   const problemRef = useRef<EditorJS>();
   const triedRef = useRef<EditorJS>();
   const _titleRef = useRef<HTMLElement>();
-  const {mutate: postQuestion, isLoading} = useMutation({
+  const _tagsRef = useRef<HTMLElement>();
+
+  const { mutate: postQuestion, isLoading } = useMutation({
     mutationFn: async ({
       title,
       problemDetail,
       tags,
-      triedMethods
+      triedMethods,
+    }: PostCreationRequest) => {
+      const payload: PostCreationRequest = {
+        title,
+        problemDetail,
+        triedMethods,
+        tags,
+      };
+      const { data } = await axios.post("/api/question/post", payload);
 
-    }:PostCreationRequest)=>{
-        const payload:PostCreationRequest = {title, problemDetail, triedMethods,tags};
-        const { data } = await axios.post("/api/question/post",payload)
-        
-        return data;
+      return data;
     },
-    onError:()=>{
+    onError: () => {
       return toast({
-        title:"Something went wrong!",
+        title: "Something went wrong!",
         description: "your question was not posted. Please try again.",
-        variant:"destructive"
-      })
+        variant: "destructive",
+      });
     },
-    onSuccess:()=>{
+    onSuccess: () => {
       const newPathname = pathname.split("/").slice(0, -1).join("/");
       router.push(newPathname);
-      router.refresh()
+      router.refresh();
       return toast({
-        description:"Your question is posted"
+        description: "Your question is posted",
       });
-    }
+    },
   });
   useEffect(() => {
     if (Object.keys(errors).length) {
@@ -95,23 +101,23 @@ const QuestionForm = () => {
     };
   }, [mounted]);
 
-  if (!mounted) return null; 
+  if (!mounted) return null;
 
-  const { ref: titleRef, ...rest } = register("title");
-
-  async function onSubmit(data: formData){
+  async function onSubmit(data: FormData) {
     const problemDetailBlocks = problemRef.current?.save();
     const triedMethodsBlocks = triedRef.current?.save();
     const title = data.title;
     const tags = data.tags;
-    const payload:PostCreationRequest={
-      title:title,
-      tags:tags,
-      triedMethods:triedMethodsBlocks,
-      problemDetail:problemDetailBlocks
-    }
+    const payload: PostCreationRequest = {
+      title: title,
+      tags: tags,
+      triedMethods: triedMethodsBlocks,
+      problemDetail: problemDetailBlocks,
+    };
+
     postQuestion(payload);
   }
+  const { ref: titleRef, ...rest } = register("title");
   return (
     <div className="my-10">
       <form onSubmit={handleSubmit(onSubmit)} id="submit-question">
@@ -182,6 +188,7 @@ const QuestionForm = () => {
             <Input
               className="w-full resize-none appearance-none overflow-hidden bg-transparent focus:outline-none"
               id="tags"
+              {...register("tags")}
               placeholder="e.g. Is there an R function for finding the index of an element in a vector?"
             />
           </div>

@@ -7,6 +7,11 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum VoteType {
+  UP
+  DOWN
+}
+
 model Account {
   id                String  @id @default(auto()) @map("_id") @db.ObjectId
   userId            String  @db.ObjectId
@@ -35,14 +40,16 @@ model Session {
 }
 
 model User {
-  id            String    @id @default(auto()) @map("_id") @db.ObjectId
+  id            String     @id @default(auto()) @map("_id") @db.ObjectId
   name          String?
-  email         String?   @unique
-  username      String?   @unique
+  email         String?    @unique
+  username      String?    @unique
   emailVerified DateTime?
   image         String?
   accounts      Account[]
   sessions      Session[]
+  questions     Question[]
+  votes         Vote[]
 }
 
 model VerificationToken {
@@ -53,11 +60,25 @@ model VerificationToken {
   @@unique([identifier, token])
 }
 
+model Vote {
+  id       String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId   String   @db.ObjectId
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  postId   String   @db.ObjectId
+  question Question @relation(fields: [postId], references: [id], onDelete: Cascade)
+  type     VoteType
+
+  @@unique([userId, postId])
+}
+
 model Question {
-  id            String @id @default(auto()) @map("_id") @db.ObjectId
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
   title         String
   problemDetail Json
   triedMethods  Json
   tags          String
+  votes         Vote[]
+  postedDate    DateTime @default(now())
   postedBy      String
+  user          User     @relation(fields: [postedBy], references: [id], onDelete: Cascade)
 }

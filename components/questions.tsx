@@ -1,21 +1,41 @@
-import { FC } from 'react'
-import { buttonVariants } from './ui/button'
-import Link from 'next/link'
-import { cn } from '@/lib/utils'
-
+import { FC, use } from "react";
+import { buttonVariants } from "./ui/button";
+import Link from "next/link";
+import { cn } from "@/lib/utils";
+import { Badge } from "./ui/badge";
+import { useMutation } from "@tanstack/react-query";
+import axios from "axios";
+import { UserAvatar } from "./useravatar";
 interface questionsProps {
-  questionType:string,
+  questionType: string;
 }
 
-const Questions: FC<questionsProps> = ({questionType, ...props}) => {
+const Questions: FC<questionsProps> = ({ questionType, ...props }) => {
   return (
-    <div className='container'>
-        <div className='flex flex-row justify-between py-5'>
-            <h1 className='text-4xl'>All Questions</h1>
-            <Link className={cn(buttonVariants({variant:'default'}), 'w-[200px]')} href="/questions/ask">Ask Question</Link>
+    <div className="container">
+      <div className="flex">
+        <div className="flex flex-col text-zinc-300 w-fit text-sm">
+          <span>0 votes</span>
+          <span>0 answers</span>
+          <span>3 views</span>
         </div>
+        <div>
+          <Link
+            href="/questions/1"
+            className={buttonVariants({ variant: "link" })}
+          >
+            question title
+          </Link>
+          <div className="flex justify-between">
+            <Badge variant="outline" className="bg-blue-100 w-fit text-sm">
+              tag
+            </Badge>
+            <UserAvatar user={{ name: "name", image: "" }} />
+          </div>
+        </div>
+      </div>
     </div>
-  )
-}
+  );
+};
 
-export default Questions
+export default Questions;

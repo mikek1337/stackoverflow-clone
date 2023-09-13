@@ -9,17 +9,17 @@ export async function POST(req: Request) {
         const body = await req.json();
         const { title, problemDetail, triedMethods, tags } = PostValidator.parse(body);
         if (session?.user) {
-            console.log(title);
+
             db.question.create({
                 data: {
                     title: title,
                     problemDetail: problemDetail,
                     triedMethods: triedMethods,
                     tags: tags,
-                    postedBy: session.user.id
+                    postedBy: session.user.id,
+                    postedDate: new Date(),
                 }
-            }).then(res => console.log(res))
-                .catch(err => console.log(err));
+            });
 
             return new Response("OK");
         }
