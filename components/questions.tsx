@@ -24,12 +24,12 @@ const Questions: FC<questionsProps> = ({ questionType, ...props }) => {
             href="/questions/1"
             className={cn(
               buttonVariants({ variant: "link" }),
-              "text-left w-fit"
+              "text-left w-fit text-blue-500"
             )}
           >
             question title
           </Link>
-          <div className="flex justify-between items-center">
+          <div className="flex justify-between items-center px-3">
             <Badge variant="outline" className="bg-blue-100 w-fit text-sm ">
               tag
             </Badge>

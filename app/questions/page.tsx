@@ -46,7 +46,7 @@ const page: FC = () => {
               <TabsTrigger value="week">Week</TabsTrigger>
               <TabsTrigger value="month">Month</TabsTrigger>
             </TabsList>
-            <TabsContent value="hot">
+            <TabsContent value="hot" className="my-5">
               <Questions questionType="hot" />
             </TabsContent>
           </Tabs>
