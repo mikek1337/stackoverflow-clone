@@ -35,7 +35,7 @@ const Questions: FC<questionsProps> = ({ questionType, ...props }) => {
             </div>
             <div className="flex flex-col w-full">
               <Link
-                href={`question/${value.id}`}
+                href={`questions/${value.id}`}
                 className={cn(
                   buttonVariants({ variant: "link" }),
                   "text-left w-fit text-blue-500 text-lg"
@@ -54,7 +54,12 @@ const Questions: FC<questionsProps> = ({ questionType, ...props }) => {
                 </div>
                 <div className="flex gap-1 items-center self-end w-fit">
                   <div className="w-10">
-                    <UserAvatar user={value.user} width="50" height="50" className="w-10 h-10" />
+                    <UserAvatar
+                      user={value.user}
+                      width="50"
+                      height="50"
+                      className="w-10 h-10"
+                    />
                   </div>
                   <span className="text-xs">{value.user.username}</span>
                 </div>

@@ -40,16 +40,18 @@ model Session {
 }
 
 model User {
-  id            String     @id @default(auto()) @map("_id") @db.ObjectId
+  id            String       @id @default(auto()) @map("_id") @db.ObjectId
   name          String?
-  email         String?    @unique
-  username      String?    @unique
+  email         String?      @unique
+  username      String?      @unique
   emailVerified DateTime?
   image         String?
   accounts      Account[]
   sessions      Session[]
   questions     Question[]
   votes         Vote[]
+  AnswerVote    AnswerVote[]
+  Answer        Answer[]
 }
 
 model VerificationToken {
@@ -71,6 +73,28 @@ model Vote {
   @@unique([userId, postId])
 }
 
+model AnswerVote {
+  id     String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId String   @db.ObjectId
+  user   User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  postId String   @db.ObjectId
+  answer Answer   @relation(fields: [postId], references: [id], onDelete: Cascade)
+  type   VoteType
+
+  @@unique([userId, postId])
+}
+
+model Answer {
+  id         String       @id @default(auto()) @map("_id") @db.ObjectId
+  userId     String       @db.ObjectId
+  user       User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  content    Json
+  votes      AnswerVote[]
+  postedDate DateTime     @default(now())
+  questionId String       @db.ObjectId
+  question   Question     @relation(fields: [questionId], references: [id], onDelete: Cascade)
+}
+
 model Question {
   id            String   @id @default(auto()) @map("_id") @db.ObjectId
   title         String
@@ -81,4 +105,5 @@ model Question {
   postedDate    DateTime @default(now())
   postedBy      String   @db.ObjectId
   user          User     @relation(fields: [postedBy], references: [id], onDelete: Cascade)
+  answers       Answer[]
 }
