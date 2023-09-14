@@ -13,23 +13,9 @@ export async function GET(req: Request) {
         });
     }
     else {
-        result = await db.question.findMany({
+        result = await db.question.findFirst({
             where: {
-                OR: [
-                    {
-                        id: q
-                    },
-                    {
-                        title: {
-                            contains: q,
-                        }
-                    },
-                    {
-                        tags: {
-                            contains: q,
-                        }
-                    }
-                ]
+                id: q
             },
         })
     }
