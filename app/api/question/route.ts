@@ -17,6 +17,16 @@ export async function GET(req: Request) {
             where: {
                 id: q
             },
+            include: {
+                user: true,
+                votes: true,
+                answers: {
+                    include: {
+                        user: true,
+                        votes: true,
+                    }
+                }
+            }
         })
     }
 
