@@ -22,6 +22,12 @@ const Questions: FC<questionsProps> = ({ questionType, ...props }) => {
       return data as PostedQuestion[];
     },
   });
+  if(data?.length == 0)
+    return(
+      <div className="w-full">
+        <p className="text-zinc-300 text-center text-xl">No Questions</p>
+      </div>
+    )
   return (
     <div className="container">
       {data?.map((value) => (

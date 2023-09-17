@@ -1,4 +1,4 @@
-"use client";
+"use client"
 import SideMenu from "@/components/sidemenu";
 import { useQuery } from "@tanstack/react-query";
 import { QuestionDetail } from "@/types/db";
@@ -14,20 +14,35 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@radix-ui/react-select";
-import { Suspense } from "react";
+import { Suspense, useEffect, useState } from "react";
 import Loading from "@/app/loading";
 import Answer from "@/components/answer";
 import PostAnswer from "@/components/postanswer";
+import PostVote from "@/components/postvote";
+import { useSession } from "next-auth/react";
+import { VoteType } from "@prisma/client";
 
 export default function Page({ params }: { params: { slug: string } }) {
+  const [questionvoteAmt, setQuestionVoteAmt] = useState(0);
+  const [answerVoteAmt, setAnswerVoteAmt] = useState(0);
+  const [questioncurrentVote, setQuestionCurrentVote] = useState<VoteType>();
+  const session = useSession();
   const { data, isLoading } = useQuery({
     queryKey: ["question"],
     queryFn: async () => {
-      const { data } = await axios.get(`/api/question?q=${params.slug}`);
+      const { data} = await axios.get(`/api/question?q=${params.slug}`);
+      const questionDetail = data as QuestionDetail;
+      const isAuth = session.status == "authenticated"
+      questionDetail.votes.map((vote)=>{
+        vote.type == "DOWN"? setQuestionVoteAmt((prev)=>prev - 1):setQuestionVoteAmt((prev)=>prev + 1);
+      });
 
+      if (isAuth)
+        setQuestionCurrentVote(questionDetail.votes.find((value)=>value.userId == session.data.user.id)?.type);
       return data as QuestionDetail;
     },
   });
+
 
   return (
     <Suspense fallback={<Loading />}>
@@ -51,11 +66,16 @@ export default function Page({ params }: { params: { slug: string } }) {
               </div>
             </div>
             <hr />
-            <div className="my-3">
-              <div>
-                <div></div>
+            <div className="my-3 flex">
+              <div className="w-fit">
+                <div>
+                  <PostVote postId={data?.id || ""} postedContent="question" initialVote={questioncurrentVote} initialVoteAmt={questionvoteAmt}/>
+                </div>
               </div>
+              <div>
+
               <EditorOutput content={data?.problemDetail} />
+              </div>
             </div>
             <div>
               <EditorOutput content={data?.triedMethods} />
@@ -85,30 +105,11 @@ export default function Page({ params }: { params: { slug: string } }) {
           </div>
           <div>
             <div className="my-3 flex justify-between">
-              <h2 className="text-zinc-300">{data?.answers.length} Answers</h2>
-              <div className="flex justify-start">
-                <div className="w-fit">
-                  <span className="text-sm">Sorted by:</span>
-                </div>
-                <Select>
-                  <SelectTrigger className="w-fit">
-                    <SelectValue placeholder="Highest Votes" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectGroup>
-                      <SelectLabel>Sort</SelectLabel>
-                      <SelectItem value="postedDate">Date Created</SelectItem>
-                      <SelectItem value="modifiedDate">
-                        Date Modified
-                      </SelectItem>
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
-              </div>
+              <h2 className="text-zinc-600 text-xl">{data?.answers.length} Answers</h2>
             </div>
-            <div>
-              <Answer data={data?.answers || []} />
-              <PostAnswer />
+             <div>
+              
+              <PostAnswer questionId={params.slug} answerData={data?.answers || []}/>
             </div>
           </div>
         </div>

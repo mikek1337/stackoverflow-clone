@@ -10,4 +10,16 @@ export const PostValidator = z.object({
     tags: z.string(),
 });
 
+export const AnswerPostValidator = z.object({
+    content: z.any(),
+    questionId: z.string()
+})
+
+export const VotePostValidator = z.object({
+    questionId: z.string(),
+    voteType: z.enum(["UP", "DOWN"])
+})
+
 export type PostCreationRequest = z.infer<typeof PostValidator>
+export type AnswerCreationRequest = z.infer<typeof AnswerPostValidator>
+export type VotePostValidator = z.infer<typeof VotePostValidator>

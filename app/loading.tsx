@@ -4,7 +4,7 @@ import { FC } from 'react'
 
 
 const Loading: FC = () => {
-  return <Skeleton/>
+  return <Skeleton className="w-full"/>
 }
 
 export default Loading

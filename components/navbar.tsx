@@ -14,7 +14,9 @@ const NavBar = async () => {
       <ul className="flex justify-center items-center gap-4">
         <li className="w-fit ">
           <div className="w-40 h-fit">
-            <Image src="/logo.svg" alt="logo" width="10" height="20" />
+            <Link href="/">
+              <Image src="/logo.svg" alt="logo" width="10" height="20" />
+            </Link>
           </div>
         </li>
         <li className="w-fit">

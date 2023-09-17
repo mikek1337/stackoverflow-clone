@@ -22,3 +22,8 @@ export type QuestionDetail = Question & {
     })[]
 }
 
+export type AnswerDetail = Answer & {
+    user: User,
+    votes: AnswerVote[]
+}
+
