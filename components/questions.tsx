@@ -8,7 +8,7 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { UserAvatar } from "./useravatar";
 import Loading from "@/app/loading";
-import type { PostedQuestion } from "@/types/db";
+import type { PostedQuestion, QuestionDetail } from "@/types/db";
 interface questionsProps {
   questionType: string;
 }
@@ -19,15 +19,15 @@ const Questions: FC<questionsProps> = ({ questionType, ...props }) => {
     queryFn: async () => {
       const { data } = await axios.get("/api/question");
       console.log(data);
-      return data as PostedQuestion[];
+      return data as QuestionDetail[];
     },
   });
-  if(data?.length == 0)
-    return(
+  if (data?.length == 0)
+    return (
       <div className="w-full">
         <p className="text-zinc-300 text-center text-xl">No Questions</p>
       </div>
-    )
+    );
   return (
     <div className="container">
       {data?.map((value) => (
@@ -35,8 +35,8 @@ const Questions: FC<questionsProps> = ({ questionType, ...props }) => {
           <hr />
           <div className="flex justify-center items-center">
             <div className="flex flex-col text-zinc-300 w-24 text-sm gap-1">
-              <span className="text-zinc-800">0 votes</span>
-              <span>0 answers</span>
+              <span className="text-zinc-800">{value.votes.length} votes</span>
+              <span>{value.answers.length} answers</span>
               <span>3 views</span>
             </div>
             <div className="flex flex-col w-full">

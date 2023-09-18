@@ -8,6 +8,8 @@ export async function GET(req: Request) {
         result = await db.question.findMany({
             include: {
                 user: true,
+                votes: true,
+                answers: true
             },
             take: 10,
         });

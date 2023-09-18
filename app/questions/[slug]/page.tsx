@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import SideMenu from "@/components/sidemenu";
 import { useQuery } from "@tanstack/react-query";
 import { QuestionDetail } from "@/types/db";
@@ -7,43 +7,41 @@ import EditorOutput from "@/components/editoroutput";
 import { Badge } from "@/components/ui/badge";
 import { UserAvatar } from "@/components/useravatar";
 import { formatTimeToNow } from "@/lib/utils";
-import { Select, SelectGroup, SelectLabel } from "@/components/ui/select";
-import {
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@radix-ui/react-select";
-import { Suspense, useEffect, useState } from "react";
+import { Suspense, useState } from "react";
 import Loading from "@/app/loading";
-import Answer from "@/components/answer";
 import PostAnswer from "@/components/postanswer";
 import PostVote from "@/components/postvote";
 import { useSession } from "next-auth/react";
 import { VoteType } from "@prisma/client";
+import AddQuestion from "@/components/addquestion";
 
 export default function Page({ params }: { params: { slug: string } }) {
   const [questionvoteAmt, setQuestionVoteAmt] = useState(0);
-  const [answerVoteAmt, setAnswerVoteAmt] = useState(0);
   const [questioncurrentVote, setQuestionCurrentVote] = useState<VoteType>();
   const session = useSession();
   const { data, isLoading } = useQuery({
     queryKey: ["question"],
     queryFn: async () => {
-      const { data} = await axios.get(`/api/question?q=${params.slug}`);
+      const { data } = await axios.get(`/api/question?q=${params.slug}`);
       const questionDetail = data as QuestionDetail;
-      const isAuth = session.status == "authenticated"
-      questionDetail.votes.map((vote)=>{
-        vote.type == "DOWN"? setQuestionVoteAmt((prev)=>prev - 1):setQuestionVoteAmt((prev)=>prev + 1);
+      const isAuth = session.status == "authenticated";
+      questionDetail.votes.map((vote) => {
+        if (vote.type == "DOWN") {
+          setQuestionVoteAmt((prev) => prev - 1);
+        } else {
+          setQuestionVoteAmt((prev) => prev + 1);
+        }
+
+        if (isAuth && vote.userId == session.data?.id) {
+          setQuestionCurrentVote(vote.type);
+        }
       });
 
-      if (isAuth)
-        setQuestionCurrentVote(questionDetail.votes.find((value)=>value.userId == session.data.user.id)?.type);
       return data as QuestionDetail;
     },
   });
 
-
+  if (isLoading) return <Loading />;
   return (
     <Suspense fallback={<Loading />}>
       <div className="flex flex-row">
@@ -51,8 +49,11 @@ export default function Page({ params }: { params: { slug: string } }) {
         <div className="container">
           <div className="">
             <div className="flex flex-col">
-              <div className="w-full">
-                <h4 className="text-3xl text-zinc-500">{data?.title}</h4>
+              <div className="flex items-center mt-2">
+                <div className="w-full">
+                  <h4 className="text-3xl text-zinc-500">{data?.title}</h4>
+                </div>
+                <AddQuestion />
               </div>
               <div className="flex gap-2 text-sm my-2">
                 <span className="w-fit">
@@ -69,12 +70,16 @@ export default function Page({ params }: { params: { slug: string } }) {
             <div className="my-3 flex">
               <div className="w-fit">
                 <div>
-                  <PostVote postId={data?.id || ""} postedContent="question" initialVote={questioncurrentVote} initialVoteAmt={questionvoteAmt}/>
+                  <PostVote
+                    postId={data?.id || ""}
+                    postedContent="question"
+                    initialVote={questioncurrentVote}
+                    initialVoteAmt={questionvoteAmt}
+                  />
                 </div>
               </div>
               <div>
-
-              <EditorOutput content={data?.problemDetail} />
+                <EditorOutput content={data?.problemDetail} />
               </div>
             </div>
             <div>
@@ -105,11 +110,15 @@ export default function Page({ params }: { params: { slug: string } }) {
           </div>
           <div>
             <div className="my-3 flex justify-between">
-              <h2 className="text-zinc-600 text-xl">{data?.answers.length} Answers</h2>
+              <h2 className="text-zinc-600 text-xl">
+                {data?.answers.length} Answers
+              </h2>
             </div>
-             <div>
-              
-              <PostAnswer questionId={params.slug} answerData={data?.answers || []}/>
+            <div>
+              <PostAnswer
+                questionId={params.slug}
+                answerData={data?.answers || []}
+              />
             </div>
           </div>
         </div>

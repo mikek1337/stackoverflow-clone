@@ -9,23 +9,47 @@ export async function POST(req: Request) {
     if (session?.user) {
         const data = await req.json();
         const votePost = VotePostValidator.parse(data);
-        console.log(votePost)
         if (q == "question") {
-            await db.vote.create({
-                data: {
+            /*   await db.vote.create({
+                  data: {
+                      type: votePost.voteType,
+                      postId: votePost.questionId,
+                      userId: session.user.id,
+                  },
+              }) */
+            await db.vote.upsert({
+                where: {
+                    userId_postId: {
+                        postId: votePost.questionId,
+                        userId: session.user.id,
+                    },
+                },
+                create: {
                     type: votePost.voteType,
                     postId: votePost.questionId,
                     userId: session.user.id,
                 },
-            })
+                update: {
+                    type: votePost.voteType,
+                },
+            });
 
         }
         else if (q == "answer") {
-            await db.answerVote.create({
-                data: {
+            await db.answerVote.upsert({
+                where: {
+                    userId_postId: {
+                        postId: votePost.questionId,
+                        userId: session.user.id,
+                    },
+                },
+                create: {
                     type: votePost.voteType,
                     postId: votePost.questionId,
                     userId: session.user.id,
+                },
+                update: {
+                    type: votePost.voteType,
                 },
             });
             /*  await db.answerVote.create({

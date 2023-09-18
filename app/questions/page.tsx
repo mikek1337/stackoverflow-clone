@@ -7,6 +7,7 @@ import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { TabsContent } from "@radix-ui/react-tabs";
 import SideMenu from "@/components/sidemenu";
+import AddQuestion from "@/components/addquestion";
 
 const page: FC = () => {
   return (
@@ -15,12 +16,7 @@ const page: FC = () => {
       <div className="container">
         <div className="flex flex-row justify-between py-5">
           <h1 className="text-4xl">All Questions</h1>
-          <Link
-            className={cn(buttonVariants({ variant: "default" }), "w-[200px]")}
-            href="/questions/ask"
-          >
-            Ask Question
-          </Link>
+          <AddQuestion />
         </div>
         <div className="w-full my-5">
           <Tabs defaultValue="hot">

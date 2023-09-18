@@ -1,16 +1,17 @@
+"use client";
 import { VoteType } from "@prisma/client";
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { Button } from "./ui/button";
 import { ArrowBigDown, ArrowBigUp } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { VotePostValidator } from "@/lib/validators/post";
 
 interface postvoteProps {
   postId: string;
   initialVoteAmt: number;
-  initialVote?: VoteType | null;
+  initialVote: VoteType | undefined;
   postedContent: string;
 }
 
@@ -20,10 +21,10 @@ const PostVote: FC<postvoteProps> = ({
   initialVote,
   postedContent,
 }: postvoteProps) => {
-  const [vote, setVote] = useState(initialVoteAmt);
   const [currentVote, setCurrentVote] = useState(initialVote);
+  const [vote, setVote] = useState(initialVoteAmt);
   const { mutate: postVote } = useMutation({
-    mutationKey:["vote"],
+    mutationKey: ["vote"],
     mutationFn: async ({ questionId, voteType }: VotePostValidator) => {
       const payload: VotePostValidator = {
         questionId: questionId,
@@ -34,9 +35,7 @@ const PostVote: FC<postvoteProps> = ({
         payload
       );
     },
-    onError: () => {
-   
-    },
+    onError: () => {},
     onSuccess: () => {
       if (currentVote == "DOWN") {
         setVote((prev) => prev - 1);
@@ -45,21 +44,24 @@ const PostVote: FC<postvoteProps> = ({
       }
     },
   });
+
   const voteAction = (voteType: VoteType) => {
-    const payload: VotePostValidator = {
-      questionId: postId,
-      voteType: voteType,
-    };
-    setCurrentVote(voteType)
-    postVote(payload);
+    if (currentVote != voteType) {
+      const payload: VotePostValidator = {
+        questionId: postId,
+        voteType: voteType,
+      };
+      setCurrentVote(voteType);
+      postVote(payload);
+    }
   };
-  console.log(currentVote);
+
   return (
     <div className="flex flex-col gap-4 sm-gap-0 pr-6 sm:w-20 pb-4 sm:pb-0">
       <Button
         size="sm"
         variant="ghost"
-        aria-aria-label="upvote"
+        aria-label="upvote"
         onClick={() => {
           voteAction("UP");
         }}
@@ -76,7 +78,7 @@ const PostVote: FC<postvoteProps> = ({
       <Button
         size="sm"
         variant="ghost"
-        aria-aria-label="downvote"
+        aria-label="downvote"
         onClick={() => {
           voteAction("DOWN");
         }}
