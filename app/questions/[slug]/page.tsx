@@ -1,47 +1,43 @@
-"use client";
 import SideMenu from "@/components/sidemenu";
-import { useQuery } from "@tanstack/react-query";
-import { QuestionDetail } from "@/types/db";
-import axios from "axios";
 import EditorOutput from "@/components/editoroutput";
 import { Badge } from "@/components/ui/badge";
 import { UserAvatar } from "@/components/useravatar";
 import { formatTimeToNow } from "@/lib/utils";
-import { Suspense, useState } from "react";
+import { Suspense } from "react";
 import Loading from "@/app/loading";
 import PostAnswer from "@/components/postanswer";
 import PostVote from "@/components/postvote";
-import { useSession } from "next-auth/react";
-import { VoteType } from "@prisma/client";
 import AddQuestion from "@/components/addquestion";
+import { db } from "@/lib/db";
+import { getAuthSession } from "@/lib/auth";
 
-export default function Page({ params }: { params: { slug: string } }) {
-  const [questionvoteAmt, setQuestionVoteAmt] = useState(0);
-  const [questioncurrentVote, setQuestionCurrentVote] = useState<VoteType>();
-  const session = useSession();
-  const { data, isLoading } = useQuery({
-    queryKey: ["question"],
-    queryFn: async () => {
-      const { data } = await axios.get(`/api/question?q=${params.slug}`);
-      const questionDetail = data as QuestionDetail;
-      const isAuth = session.status == "authenticated";
-      questionDetail.votes.map((vote) => {
-        if (vote.type == "DOWN") {
-          setQuestionVoteAmt((prev) => prev - 1);
-        } else {
-          setQuestionVoteAmt((prev) => prev + 1);
+export default async function Page({ params }: { params: { slug: string } }) {
+  const session = await getAuthSession();
+  const data = await db.question.findUnique({
+    where: {
+      id: params.slug,
+    },
+    include: {
+      votes: true,
+      user: true,
+      answers:{
+        include:{
+          user:true,
+          votes:true
         }
-
-        if (isAuth && vote.userId == session.data?.id) {
-          setQuestionCurrentVote(vote.type);
-        }
-      });
-
-      return data as QuestionDetail;
+      }
     },
   });
-
-  if (isLoading) return <Loading />;
+  let questionvoteAmt: number = 0;
+  let questioncurrentVote = data?.votes.find(
+    (vote) => vote.userId === session?.user.id
+  )?.type;
+  questionvoteAmt =
+    data?.votes.reduce((acc: number, vote) => {
+      if (vote.type === "DOWN") return acc - 1;
+      if (vote.type === "UP") return acc + 1;
+      return acc;
+    }, 0) || 0;
   return (
     <Suspense fallback={<Loading />}>
       <div className="flex flex-row">

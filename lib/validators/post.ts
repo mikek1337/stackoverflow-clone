@@ -12,14 +12,23 @@ export const PostValidator = z.object({
 
 export const AnswerPostValidator = z.object({
     content: z.any(),
-    questionId: z.string()
-})
+    questionId: z.string(),
+});
 
 export const VotePostValidator = z.object({
     questionId: z.string(),
-    voteType: z.enum(["UP", "DOWN"])
-})
+    voteType: z.enum(["UP", "DOWN"]),
+});
 
-export type PostCreationRequest = z.infer<typeof PostValidator>
-export type AnswerCreationRequest = z.infer<typeof AnswerPostValidator>
-export type VotePostValidator = z.infer<typeof VotePostValidator>
+export const UserPostValidator = z.object({
+    username: z
+        .string()
+        .min(5, { message: "username needs to be at least 5 characters" })
+        .max(10, { message: "username exceeded character limit" })
+        .nonempty({ message: "username required" }),
+    name: z.string().min(3, { message: "name needs to be at least 3 characters" }).nonempty({ message: "username required" })
+});
+
+export type PostCreationRequest = z.infer<typeof PostValidator>;
+export type AnswerCreationRequest = z.infer<typeof AnswerPostValidator>;
+export type VotePostValidator = z.infer<typeof VotePostValidator>;

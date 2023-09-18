@@ -1,35 +1,20 @@
-import { FC, Suspense, useEffect, useState } from "react";
-import { Button } from "@/components/ui/button";
+import { FC, Suspense } from "react";
 import EditorOutput from "./editoroutput";
-import type { Answer, VoteType } from "@prisma/client";
+import type { Answer } from "@prisma/client";
 import PostVote from "./postvote";
-import { AnswerDetail, QuestionDetail } from "@/types/db";
+import { AnswerDetail } from "@/types/db";
 import { UserAvatar } from "./useravatar";
 import { formatTimeToNow } from "@/lib/utils";
 import Loading from "@/app/loading";
-import { useSession } from "next-auth/react";
+
 interface AnswerProps {
   data: AnswerDetail[];
+  userId:string;
+  
 }
 
-const Answer: FC<AnswerProps> = ({ data }: AnswerProps) => {
-  const session = useSession();
-  const [answerVoteAmt, setAnswerVoteAmt] = useState<number>(0);
-  const [answerCurrentVote, setAnswerCurrentVote] = useState<VoteType>();
-  useEffect(() => {
-    data.map((answer) => {
-      answer.votes.map((vote) => {
-        vote.type == "DOWN"
-          ? setAnswerVoteAmt((prev) => prev - 1)
-          : setAnswerVoteAmt((prev) => prev + 1);
-      });
-      if (session.status == "authenticated")
-        setAnswerCurrentVote(
-          answer.votes.find((value) => value.userId == session.data.user.id)
-            ?.type
-        );
-    });
-  }, [data]);
+const Answer: FC<AnswerProps> = ({ data, userId }: AnswerProps) => {
+
   return (
     <Suspense fallback={<Loading />}>
       {data?.map((answer) => (
@@ -46,8 +31,12 @@ const Answer: FC<AnswerProps> = ({ data }: AnswerProps) => {
               <PostVote
                 postId={answer.id}
                 postedContent="answer"
-                initialVoteAmt={answerVoteAmt}
-                initialVote={answerCurrentVote}
+                initialVoteAmt={answer.votes.reduce((acc, vote)=>{
+                  if (vote.type === "DOWN") return acc - 1;
+                  if(vote.type === "UP") return acc + 1;
+                  return acc
+                },0)}
+                initialVote={answer.votes.find((vote)=> vote.userId === userId)?.type}
               />
             </div>
             <div>
