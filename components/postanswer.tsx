@@ -17,11 +17,9 @@ const PostAnswer: FC<PostAnswerProps> = async ({
   answerData,
 }: PostAnswerProps) => {
   const session = await getAuthSession();
-  if(!session?.user)
-    redirect("/login");
   return (
       <Suspense fallback={<Loading />}>
-        <Answer data={answerData || []} userId={session?.user.id}/>
+        <Answer data={answerData || []} userId={session?.user.id || ""}/>
         {session?.user && <AnswerForm questionId={questionId}/> }
         
       </Suspense>

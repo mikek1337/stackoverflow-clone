@@ -26,9 +26,14 @@ export const UserPostValidator = z.object({
         .min(5, { message: "username needs to be at least 5 characters" })
         .max(10, { message: "username exceeded character limit" })
         .nonempty({ message: "username required" }),
-    name: z.string().min(3, { message: "name needs to be at least 3 characters" }).nonempty({ message: "username required" })
+    name: z
+        .string()
+        .min(3, { message: "name needs to be at least 3 characters" })
+        .nonempty({ message: "username required" }),
+    imagePath: z.string()
 });
 
 export type PostCreationRequest = z.infer<typeof PostValidator>;
 export type AnswerCreationRequest = z.infer<typeof AnswerPostValidator>;
 export type VotePostValidator = z.infer<typeof VotePostValidator>;
+export type UserPostValidator = z.infer<typeof UserPostValidator>;
