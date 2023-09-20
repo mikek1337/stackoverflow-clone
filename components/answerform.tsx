@@ -8,11 +8,13 @@ import { AnswerCreationRequest } from "@/lib/validators/post";
 import { useMutation } from "@tanstack/react-query";
 import EditorJS from "@editorjs/editorjs";
 import { cn } from "@/lib/utils";
+import { useRouter } from "next/navigation";
 interface answerformProps {
   questionId: string;
 }
 
 const AnswerForm: FC<answerformProps> = ({ questionId }: answerformProps) => {
+  const router = useRouter();
   const ref = useRef<EditorJS>();
   const { mutate: postAnswer } = useMutation({
     mutationFn: async ({ content, questionId }: AnswerCreationRequest) => {
@@ -43,6 +45,8 @@ const AnswerForm: FC<answerformProps> = ({ questionId }: answerformProps) => {
         title: "Answer posted",
         variant: "default",
       });
+      router.refresh();
+      ref.current?.clear();
     },
   });
 

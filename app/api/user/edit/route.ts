@@ -9,6 +9,7 @@ export async function PATCH(req: Request) {
 
             const data = await req.json();
             const payload = UserPostValidator.parse(data);
+            console.log(data);
             await db.user.update({
                 where: {
                     id: session.user.id

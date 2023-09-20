@@ -1,10 +1,7 @@
 "use client";
 import { FC } from "react";
-import Link from "next/link";
 import Questions from "@/components/questions";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { buttonVariants } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
 import { TabsContent } from "@radix-ui/react-tabs";
 import SideMenu from "@/components/sidemenu";
 import AddQuestion from "@/components/addquestion";

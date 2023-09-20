@@ -2,8 +2,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { Input } from "./ui/input";
 import { buttonVariants } from "./ui/button";
-import { cn } from "@/lib/utils";
-import { useSession } from "next-auth/react";
 import { UserAccountNav } from "./usernavmenu";
 import { getAuthSession } from "@/lib/auth";
 

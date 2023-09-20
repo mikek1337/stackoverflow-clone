@@ -14,7 +14,10 @@ const SettingMenu: FC = () => {
           </Link>
         </li>
         <li className="p-2">
-          <Link href="/settings/delete">Delete Profile</Link>
+          <Link href="/setting/delete">Delete Profile</Link>
+        </li>
+        <li className="p-2">
+          <Link href="/setting/question">Your questions</Link>
         </li>
       </ul>
     </div>

@@ -60,7 +60,7 @@ const ProfileForm: FC<ProfileFormProps> = ({ user }: ProfileFormProps) => {
   const submit = async(data:FormData)=>{
     const username = data.username;
     const name = data.name;
-    const imagePath = data.imagePath;
+    const imagePath = filePath;
     const payload:UserPostValidator = {
       username,
       name,
@@ -80,22 +80,23 @@ const ProfileForm: FC<ProfileFormProps> = ({ user }: ProfileFormProps) => {
         <div>
           <form id="user-profile" className="my-3" onSubmit={handleSubmit(submit)}>
             <div className="border-2 rounded-md p-3 ">
-              <div className="p-3 my-6">
+              <div className="p-3 my-6 overflow-clip h-">
                 <span>Profile image</span>
-                <div className=" w-[140px] h-[140px]">
+                <div className=" w-[200px] h-[200px]">
                   <Image
                     src={filePath || ""}
                     alt="user pic"
-                    width="100"
-                    height="100"
+                    width={100}
+                    height={100}
                   />
                   <UploadButton
                    endpoint="imageUploader"
                    onClientUploadComplete={(res)=>{
                     changeImage(res);
                    }}
-                    className="relative  py-2 px-0 z-10 -top-8  text-xs bg-zinc-400 bg-transparent h-fit text-white"
+                    className="relative w-full  z-1 -top-8  text-xs bg-zinc-400 bg-transparent h-fit text-white"
                   />
+                </div>
                   <Input
                     type="text"
                     className="hidden"
@@ -103,7 +104,6 @@ const ProfileForm: FC<ProfileFormProps> = ({ user }: ProfileFormProps) => {
                     {...register("imagePath")}
                     value={filePath}
                   />
-                </div>
               </div>
               <div className="w-[400px]">
                 <label htmlFor="username">Display name</label>
