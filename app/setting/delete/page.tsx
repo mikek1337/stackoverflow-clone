@@ -10,7 +10,7 @@ import { signOut } from "next-auth/react";
 import { redirect } from "next/navigation";
 interface pageProps {}
 
-const page: FC<pageProps> = ({}) => {
+const Page: FC<pageProps> = ({}) => {
   const { mutate: deleteUser } = useMutation({
     mutationFn: async () => {
       const { data } = await axios.delete("/api/user/delete");
@@ -40,8 +40,8 @@ const page: FC<pageProps> = ({}) => {
       <hr className="mb-3" />
       <div className="py-3">
         <p>
-          Before confirming that you would like your profile deleted, we'd like
-          to take a moment to explain the implications of deletion:
+          Before confirming that you would like your profile deleted, we $apos d
+          like to take a moment to explain the implications of deletion:
         </p>
       </div>
       <div>
@@ -56,9 +56,9 @@ const page: FC<pageProps> = ({}) => {
           <li className="py-2">
             <p>
               Your questions and answers will remain on the site, but will be
-              disassociated and anonymized (the author will be listed as
-              "user8876279") and will not indicate your authorship even if you
-              later return to the site.
+              disassociated and anonymized (the author will be listed as &quot
+              user8876279 &quot) and will not indicate your authorship even if
+              you later return to the site.
             </p>
           </li>
         </ul>
@@ -66,15 +66,15 @@ const page: FC<pageProps> = ({}) => {
           <p>
             Confirming deletion will only delete your profile on Stack Overflow
             - it will not affect any of your other profiles on the Stack
-            Exchange network. If you want to delete multiple profiles, you'll
-            need to visit each site separately and request deletion of those
+            Exchange network. If you want to delete multiple profiles, you $apos
+            ll need to visit each site separately and request deletion of those
             individual profiles.
           </p>
         </div>
         <div className="flex gap-2 items-center">
           <Checkbox
             className="checked:text-red-400"
-            onCheckedChange={(e) => {
+            onCheckedChange={() => {
               isChecked ? setIsChecked(false) : setIsChecked(true);
               console.log(isChecked);
             }}
@@ -99,4 +99,4 @@ const page: FC<pageProps> = ({}) => {
   );
 };
 
-export default page;
+export default Page;

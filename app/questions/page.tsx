@@ -19,8 +19,7 @@ const page: FC = () => {
           <Tabs defaultValue="hot">
             <TabsList className="w-[300px] float-right mb-10">
               <TabsTrigger value="hot">hot</TabsTrigger>
-              <TabsTrigger value="new">interesting</TabsTrigger>
-              <TabsTrigger value="week">Bountied</TabsTrigger>
+              <TabsTrigger value="new">Today</TabsTrigger>
               <TabsTrigger value="week">Week</TabsTrigger>
               <TabsTrigger value="month">Month</TabsTrigger>
             </TabsList>

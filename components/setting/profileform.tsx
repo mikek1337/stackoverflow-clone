@@ -25,7 +25,7 @@ const ProfileForm: FC<ProfileFormProps> = ({ user }: ProfileFormProps) => {
   const [filePath, setFilePath] = useState<string>(user?.image || "");
   const { UploadButton, UploadDropzone, Uploader } =
     generateComponents<OurFileRouter>();
-  const fileInput = useRef<HTMLInputElement>(null);
+
   const router = useRouter();
   const { register, handleSubmit } = useForm<FormData>({
     resolver: zodResolver(UserPostValidator),
@@ -35,7 +35,7 @@ const ProfileForm: FC<ProfileFormProps> = ({ user }: ProfileFormProps) => {
       imagePath: user?.image || "",
     },
   });
-  const {mutate:updateUser} = useMutation({
+  const { mutate: updateUser } = useMutation({
     mutationFn: async ({ username, name, imagePath }: UserPostValidator) => {
       const payload: UserPostValidator = { username, name, imagePath };
 
@@ -57,28 +57,31 @@ const ProfileForm: FC<ProfileFormProps> = ({ user }: ProfileFormProps) => {
     },
   });
 
-  const submit = async(data:FormData)=>{
+  const submit = async (data: FormData) => {
     const username = data.username;
     const name = data.name;
     const imagePath = filePath;
-    const payload:UserPostValidator = {
+    const payload: UserPostValidator = {
       username,
       name,
-      imagePath
+      imagePath,
     };
     updateUser(payload);
-  }
-  const changeImage = (res:UploadFileResponse[] | undefined)=>{
-    if(res instanceof Array)
-    {
+  };
+  const changeImage = (res: UploadFileResponse[] | undefined) => {
+    if (res instanceof Array) {
       setFilePath(res[0].url);
     }
-  }
+  };
   return (
     <div>
       <div>
         <div>
-          <form id="user-profile" className="my-3" onSubmit={handleSubmit(submit)}>
+          <form
+            id="user-profile"
+            className="my-3"
+            onSubmit={handleSubmit(submit)}
+          >
             <div className="border-2 rounded-md p-3 ">
               <div className="p-3 my-6 overflow-clip h-">
                 <span>Profile image</span>
@@ -90,20 +93,20 @@ const ProfileForm: FC<ProfileFormProps> = ({ user }: ProfileFormProps) => {
                     height={100}
                   />
                   <UploadButton
-                   endpoint="imageUploader"
-                   onClientUploadComplete={(res)=>{
-                    changeImage(res);
-                   }}
+                    endpoint="imageUploader"
+                    onClientUploadComplete={(res) => {
+                      changeImage(res);
+                    }}
                     className="relative w-full  z-1 -top-8  text-xs bg-zinc-400 bg-transparent h-fit text-white"
                   />
                 </div>
-                  <Input
-                    type="text"
-                    className="hidden"
-                    id="image"
-                    {...register("imagePath")}
-                    value={filePath}
-                  />
+                <Input
+                  type="text"
+                  className="hidden"
+                  id="image"
+                  {...register("imagePath")}
+                  value={filePath}
+                />
               </div>
               <div className="w-[400px]">
                 <label htmlFor="username">Display name</label>

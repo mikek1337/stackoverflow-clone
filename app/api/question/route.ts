@@ -3,6 +3,7 @@ import { db } from "@/lib/db";
 export async function GET(req: Request) {
     const url = new URL(req.url);
     const q = url.searchParams.get("q");
+    const skip = url.searchParams.get("skip");
     let result;
     if (!q) {
         result = await db.question.findMany({
@@ -11,6 +12,7 @@ export async function GET(req: Request) {
                 votes: true,
                 answers: true
             },
+            skip: skip ? parseInt(skip) : 0,
             take: 10,
         });
     }

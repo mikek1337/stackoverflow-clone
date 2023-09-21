@@ -43,7 +43,7 @@ export function UserAccountNav({ user, ...props }: UserAccountNavProps) {
         </DropdownMenuItem>
 
         <DropdownMenuItem asChild>
-          <Link href="/question/ask">Ask question</Link>
+          <Link href="/questions/ask">Ask question</Link>
         </DropdownMenuItem>
 
         <DropdownMenuItem asChild>
