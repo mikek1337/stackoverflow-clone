@@ -7,7 +7,7 @@ import { FC } from "react";
 const SideMenu: FC = () => {
   const pathName = usePathname();
   return (
-    <div className="w-[158px] border-r-2 text-zinc-500 h-screen">
+    <div className="md:w-[159px] md:block hidden border-r-2 text-zinc-500 h-screen">
       <div className="active:bg-slate-200 py-2 mt-4">
         <Link href="/">Home</Link>
       </div>

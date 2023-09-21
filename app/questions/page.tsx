@@ -10,12 +10,12 @@ const page: FC = () => {
   return (
     <div className="flex flex-row">
       <SideMenu />
-      <div className="container">
+      <div className="md:container">
         <div className="flex flex-row justify-between py-5">
-          <h1 className="text-4xl">All Questions</h1>
+          <h1 className="text-2xl md:text-4xl">Top Questions</h1>
           <AddQuestion />
         </div>
-        <div className="w-full my-5">
+        <div className="my-5">
           <Tabs defaultValue="hot">
             <TabsList className="w-[300px] float-right mb-10">
               <TabsTrigger value="hot">hot</TabsTrigger>
