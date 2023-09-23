@@ -32,18 +32,22 @@ const Questions: FC<questionsProps> = ({ questionType, ...props }) => {
       {data?.map((value) => (
         <Suspense fallback={<Loading />} key={value.id}>
           <hr className="my-10 md:my-2" />
-          <div className="flex flex-col md:flex-row px-2 md:px-0 justify-center items-center md:pr-10 border-2 w-full md:w-fit ">
-            <div className="flex md:flex-col my-3 md:my-0   items-center  text-zinc-300 md:w-24 md:text-sm text-xs gap-1">
-              <span className="text-zinc-800">{value.votes.length} votes</span>
-              <span>{value.answers.length} answers</span>
-              <span>3 views</span>
+          <div className="flex flex-col md:flex-row px-2 md:px-0 justify-center items-center md:pr-10 border-2 w-full md:w-full ">
+            <div className="flex md:flex-col my-3 md:my-0 items-center  text-zinc-300 md:w-24 md:text-sm text-xs md:gap-1 gap-3">
+              <span className="text-zinc-800 w-fit">
+                {value.votes.length} votes
+              </span>
+              <span className="w-fit text-zinc-600">
+                {value.answers.length} answers
+              </span>
+              <span className="w-fit text-zinc-600">3 views</span>
             </div>
             <div className="flex flex-col w-full">
               <Link
                 href={`questions/${value.id}`}
                 className={cn(
                   buttonVariants({ variant: "link" }),
-                  "text-left w-fit text-blue-500 text-lg"
+                  "w-fit text-blue-500 md:text-lg text-sm"
                 )}
               >
                 <div className="overflow-hidden w-auto border-2">

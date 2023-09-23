@@ -108,14 +108,14 @@ const QuestionForm = () => {
     const triedMethodsBlocks = await triedRef.current?.save();
     const title = data.title;
     const tags = data.tags;
-    
+
     const payload: PostCreationRequest = {
       title: title,
       tags: tags,
       triedMethods: triedMethodsBlocks,
       problemDetail: problemDetailBlocks,
     };
-    console.log(payload,"here");
+    console.log(payload, "here");
     postQuestion(payload);
   }
   const { ref: titleRef, ...rest } = register("title");
@@ -129,7 +129,7 @@ const QuestionForm = () => {
           <span className="text-xs">
             Be specific and imagine youre asking a question to another person.
           </span>
-          <div className="w-[811px] mt-3">
+          <div className="md:w-[811px] mt-3">
             <Input
               className="w-full resize-none appearance-none overflow-hidden bg-transparent focus:outline-none"
               id="title"
@@ -160,7 +160,7 @@ const QuestionForm = () => {
               Introduce the problem and expand on what you put in the title
             </span>
           </div>
-          <div className="mt-5 w-[811px]">
+          <div className="mt-5 md:w-[811px] ">
             <Editor refer={problemRef} id="problemDetail" />
           </div>
         </div>
@@ -174,7 +174,7 @@ const QuestionForm = () => {
               actually resulted.
             </span>
           </div>
-          <div className=" mt-5 w-[811px]">
+          <div className=" mt-5 md:w-[811px]">
             <Editor refer={triedRef} id="triedMethods" />
           </div>
         </div>
@@ -185,7 +185,7 @@ const QuestionForm = () => {
           <span className="text-xs">
             Add up to 5 tags to describe what your question is about.
           </span>
-          <div className="w-[811px] mt-3">
+          <div className="md:w-[811px] mt-3">
             <Input
               className="w-full resize-none appearance-none overflow-hidden bg-transparent focus:outline-none"
               id="tags"
