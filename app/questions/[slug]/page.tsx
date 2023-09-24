@@ -42,14 +42,16 @@ export default async function Page({ params }: { params: { slug: string } }) {
     <Suspense fallback={<Loading />}>
       <div className="flex flex-row">
         <SideMenu />
-        <div className="container">
+        <div className="md:container">
           <div className="">
             <div className="flex flex-col">
-              <div className="flex items-center mt-2">
+              <div className="flex md:flex-row flex-col md:items-center mt-2">
                 <div className="w-full">
-                  <h4 className="text-3xl text-zinc-500">{data?.title}</h4>
+                  <h4 className="md:text-3xl text-xl text-zinc-500">{data?.title}</h4>
                 </div>
-                <AddQuestion />
+                <div className="place-self-end">
+                  <AddQuestion/>
+                </div>
               </div>
               <div className="flex gap-2 text-sm my-2">
                 <span className="w-fit">
@@ -74,7 +76,7 @@ export default async function Page({ params }: { params: { slug: string } }) {
                   />
                 </div>
               </div>
-              <div>
+              <div className="w-full">
                 <EditorOutput content={data?.problemDetail} />
               </div>
             </div>
