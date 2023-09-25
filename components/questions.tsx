@@ -28,26 +28,28 @@ const Questions: FC<questionsProps> = ({ questionType, ...props }) => {
       </div>
     );
   return (
-    <div className="md:container border-2">
+    <div className="md:container">
       {data?.map((value) => (
         <Suspense fallback={<Loading />} key={value.id}>
           <hr className="my-10" />
-          <div className="flex justify-center items-center md:pr-10 border-2 w-full md:w-fit">
-            <div className="flex flex-col items-center  text-zinc-300 w-24 md:text-sm text-xs gap-1 flex-shrink">
+          <div className="flex md:flex-row flex-col justify-center md:items-center md:pr-10">
+            <div className="flex md:flex-col flex-row text-zinc-300 md:w-24 w-fit  md:text-sm text-xs gap-1 px-2">
               <span className="text-zinc-800">{value.votes.length} votes</span>
-              <span>{value.answers.length} answers</span>
+              <span className="">{value.answers.length} answers</span>
               <span>3 views</span>
             </div>
-            <div className="flex flex-col w-full">
+            <div className="flex flex-col">
               <Link
                 href={`questions/${value.id}`}
                 className={cn(
                   buttonVariants({ variant: "link" }),
-                  "text-left w-fit text-blue-500 text-lg"
+                  "w-fit text-blue-500 text-lg"
                 )}
               >
-                <div className="flex-shrink w-full overflow-hidden">
-                  <p className="truncate text-sm text-ellipsis">{value.title}</p>
+                <div className="w-full overflow-hidden">
+                  <p className="text-sm md:text-lg text-ellipsis">
+                    {value.title}
+                  </p>
                 </div>
               </Link>
               <div className="flex justify-between  px-5 w-full mt-5">
@@ -61,7 +63,7 @@ const Questions: FC<questionsProps> = ({ questionType, ...props }) => {
                 </div>
               </div>
               <div className="w-fit self-end">
-                <div className="w-fit flex items-center gap-1 -mr-10">
+                <div className="w-fit flex items-center gap-1 -mr-15">
                   <UserAvatar
                     user={value.user}
                     width="10"

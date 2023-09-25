@@ -2,7 +2,7 @@ import SideMenu from "@/components/sidemenu";
 import EditorOutput from "@/components/editoroutput";
 import { Badge } from "@/components/ui/badge";
 import { UserAvatar } from "@/components/useravatar";
-import { formatTimeToNow } from "@/lib/utils";
+import { cn, formatTimeToNow } from "@/lib/utils";
 import { Suspense } from "react";
 import Loading from "@/app/loading";
 import PostAnswer from "@/components/postanswer";
@@ -10,6 +10,7 @@ import PostVote from "@/components/postvote";
 import AddQuestion from "@/components/addquestion";
 import { db } from "@/lib/db";
 import { getAuthSession } from "@/lib/auth";
+import Comment from "@/components/comment";
 
 export default async function Page({ params }: { params: { slug: string } }) {
   const session = await getAuthSession();
@@ -20,12 +21,12 @@ export default async function Page({ params }: { params: { slug: string } }) {
     include: {
       votes: true,
       user: true,
-      answers:{
-        include:{
-          user:true,
-          votes:true
-        }
-      }
+      answers: {
+        include: {
+          user: true,
+          votes: true,
+        },
+      },
     },
   });
   let questionvoteAmt: number = 0;
@@ -47,10 +48,12 @@ export default async function Page({ params }: { params: { slug: string } }) {
             <div className="flex flex-col">
               <div className="flex md:flex-row flex-col md:items-center mt-2">
                 <div className="w-full">
-                  <h4 className="md:text-3xl text-xl text-zinc-500">{data?.title}</h4>
+                  <h4 className="md:text-3xl text-xl text-zinc-500">
+                    {data?.title}
+                  </h4>
                 </div>
                 <div className="place-self-end">
-                  <AddQuestion/>
+                  <AddQuestion />
                 </div>
               </div>
               <div className="flex gap-2 text-sm my-2">
@@ -105,6 +108,10 @@ export default async function Page({ params }: { params: { slug: string } }) {
                 <span className="text-xs">{data?.user.username}</span>
               </div>
             </div>
+          </div>
+          <div className="my-10">
+            <hr />
+            <Comment quesionId={data?.id || ""} />
           </div>
           <div>
             <div className="my-3 flex justify-between">

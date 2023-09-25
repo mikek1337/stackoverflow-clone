@@ -46,20 +46,42 @@ model Session {
 }
 
 model User {
-  id            String       @id @default(auto()) @map("_id") @db.ObjectId
-  name          String?
-  email         String?      @unique
-  username      String?      @unique
-  emailVerified DateTime?
-  image         String?
-  about         String?
-  location      String?
-  accounts      Account[]
-  sessions      Session[]
-  questions     Question[]
-  votes         Vote[]
-  AnswerVote    AnswerVote[]
-  Answer        Answer[]
+  id              String            @id @default(auto()) @map("_id") @db.ObjectId
+  name            String?
+  email           String?           @unique
+  username        String?           @unique
+  emailVerified   DateTime?
+  image           String?
+  about           String?
+  location        String?
+  accounts        Account[]
+  sessions        Session[]
+  questions       Question[]
+  votes           Vote[]
+  AnswerVote      AnswerVote[]
+  Answer          Answer[]
+  QuestionComment QuestionComment[]
+  AnswerComment   AnswerComment[]
+}
+
+model QuestionComment {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  comment    String
+  userId     String   @db.ObjectId
+  user       User     @relation(fields: [userId], references: [id])
+  questionId String   @db.ObjectId
+  question   Question @relation(fields: [questionId], references: [id])
+  postedDate DateTime @default(now())
+}
+
+model AnswerComment {
+  id       String @id @default(auto()) @map("_id") @db.ObjectId
+  comment  String
+  userId   String @db.ObjectId
+  user     User   @relation(fields: [userId], references: [id])
+  answerId String @db.ObjectId
+  answer   Answer @relation(fields: [answerId], references: [id])
+  postedDate DateTime @default(now())
 }
 
 model VerificationToken {
@@ -93,26 +115,28 @@ model AnswerVote {
 }
 
 model Answer {
-  id         String       @id @default(auto()) @map("_id") @db.ObjectId
-  userId     String       @db.ObjectId
-  user       User         @relation(fields: [userId], references: [id])
-  content    Json
-  votes      AnswerVote[]
-  postedDate DateTime     @default(now())
-  questionId String       @db.ObjectId
-  status     Status?
-  question   Question     @relation(fields: [questionId], references: [id])
+  id            String          @id @default(auto()) @map("_id") @db.ObjectId
+  userId        String          @db.ObjectId
+  user          User            @relation(fields: [userId], references: [id])
+  content       Json
+  votes         AnswerVote[]
+  postedDate    DateTime        @default(now())
+  questionId    String          @db.ObjectId
+  status        Status?
+  question      Question        @relation(fields: [questionId], references: [id])
+  AnswerComment AnswerComment[]
 }
 
 model Question {
-  id            String   @id @default(auto()) @map("_id") @db.ObjectId
-  title         String
-  problemDetail Json
-  triedMethods  Json
-  tags          String
-  votes         Vote[]
-  postedDate    DateTime @default(now())
-  postedBy      String   @db.ObjectId
-  user          User     @relation(fields: [postedBy], references: [id])
-  answers       Answer[]
+  id              String            @id @default(auto()) @map("_id") @db.ObjectId
+  title           String
+  problemDetail   Json
+  triedMethods    Json
+  tags            String
+  votes           Vote[]
+  postedDate      DateTime          @default(now())
+  postedBy        String            @db.ObjectId
+  user            User              @relation(fields: [postedBy], references: [id])
+  answers         Answer[]
+  QuestionComment QuestionComment[]
 }
