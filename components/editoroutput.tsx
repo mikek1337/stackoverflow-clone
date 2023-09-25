@@ -2,8 +2,10 @@
 
 import CustomCodeRenderer from '@/components/renderers/customcoderenderer'
 import CustomImageRenderer from '@/components/renderers/customimagerenderer'
+
 import { FC } from 'react'
 import dynamic from 'next/dynamic'
+import CustomLinkRenderer from './renderers/customlinkrenderer'
 
 const Output = dynamic(
   async () => (await import('editorjs-react-renderer')).default,
@@ -17,6 +19,7 @@ interface EditorOutputProps {
 const renderers = {
   image: CustomImageRenderer,
   code: CustomCodeRenderer,
+
 }
 
 const style = {
@@ -24,6 +27,9 @@ const style = {
     fontSize: '1rem',
     lineHeight: '1.25rem',
   },
+  link:{
+    width:"100px"
+  }
 }
 
 const EditorOutput: FC<EditorOutputProps> = ({ content }) => {

@@ -33,6 +33,12 @@ export const UserPostValidator = z.object({
     imagePath: z.string()
 });
 
+export const CommentPostValidator = z.object({
+    comment: z.string().max(512, { message: "comment exceeds 512 characters" }),
+    questionId: z.string()
+});
+
+export type CommentPostValidator = z.infer<typeof CommentPostValidator>;
 export type PostCreationRequest = z.infer<typeof PostValidator>;
 export type AnswerCreationRequest = z.infer<typeof AnswerPostValidator>;
 export type VotePostValidator = z.infer<typeof VotePostValidator>;
