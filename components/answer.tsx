@@ -6,15 +6,14 @@ import { AnswerDetail } from "@/types/db";
 import { UserAvatar } from "./useravatar";
 import { formatTimeToNow } from "@/lib/utils";
 import Loading from "@/app/loading";
+import Comment from "./comment";
 
 interface AnswerProps {
   data: AnswerDetail[];
-  userId:string;
-  
+  userId: string;
 }
 
 const Answer: FC<AnswerProps> = ({ data, userId }: AnswerProps) => {
-
   return (
     <Suspense fallback={<Loading />}>
       {data?.map((answer) => (
@@ -31,12 +30,14 @@ const Answer: FC<AnswerProps> = ({ data, userId }: AnswerProps) => {
               <PostVote
                 postId={answer.id}
                 postedContent="answer"
-                initialVoteAmt={answer.votes.reduce((acc, vote)=>{
+                initialVoteAmt={answer.votes.reduce((acc, vote) => {
                   if (vote.type === "DOWN") return acc - 1;
-                  if(vote.type === "UP") return acc + 1;
-                  return acc
-                },0)}
-                initialVote={answer.votes.find((vote)=> vote.userId === userId)?.type}
+                  if (vote.type === "UP") return acc + 1;
+                  return acc;
+                }, 0)}
+                initialVote={
+                  answer.votes.find((vote) => vote.userId === userId)?.type
+                }
               />
             </div>
             <div>
@@ -59,6 +60,7 @@ const Answer: FC<AnswerProps> = ({ data, userId }: AnswerProps) => {
             </div>
           </div>
           <hr />
+          <Comment contentId={answer.id} type="answer" />
         </div>
       ))}
     </Suspense>

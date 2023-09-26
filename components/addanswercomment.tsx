@@ -3,20 +3,22 @@ import { FC, useState } from "react";
 import { Button } from "./ui/button";
 import TextareaAutosize from "react-textarea-autosize";
 import { useMutation } from "@tanstack/react-query";
-import axios from "axios";
 import { CommentPostValidator } from "@/lib/validators/post";
+import axios from "axios";
 import { toast } from "@/hooks/use-toast";
-interface AddCommentProps {
-  questionId: string;
+interface AddAnswerCommentProps {
+  answerId: string;
 }
 
-const AddComment: FC<AddCommentProps> = ({ questionId }) => {
+const AddAnswerComment: FC<AddAnswerCommentProps> = ({
+  answerId,
+}: AddAnswerCommentProps) => {
   const [hide, setHide] = useState<boolean>(true);
   const [comment, setComment] = useState<string>("");
   const { mutate: postComment } = useMutation({
     mutationFn: async ({ comment, questionId }: CommentPostValidator) => {
       const payload: CommentPostValidator = { comment, questionId };
-      const { data } = await axios.post("/api/comment/question/post", payload);
+      const { data } = await axios.post("/api/comment/answer/post", payload);
       return data;
     },
     onError: () => {
@@ -38,7 +40,7 @@ const AddComment: FC<AddCommentProps> = ({ questionId }) => {
     if (comment != "") {
       const commentPost: CommentPostValidator = {
         comment: comment,
-        questionId: questionId,
+        questionId: answerId,
       };
       postComment(commentPost);
     }
@@ -76,4 +78,4 @@ const AddComment: FC<AddCommentProps> = ({ questionId }) => {
   );
 };
 
-export default AddComment;
+export default AddAnswerComment;

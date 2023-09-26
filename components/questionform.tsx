@@ -3,7 +3,7 @@ import { PostValidator, PostCreationRequest } from "@/lib/validators/post";
 import { usePathname, useRouter } from "next/navigation";
 import { Input } from "./ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect, useRef, useState } from "react";
+import { KeyboardEvent, useEffect, useRef, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import EditorJS from "@editorjs/editorjs";
@@ -16,6 +16,7 @@ import axios from "axios";
 type FormData = z.infer<typeof PostValidator>;
 const QuestionForm = () => {
   const [mounted, setMounted] = useState(false);
+  const [tags, setTags] = useState<string[]>([]); //[{id:1, name: "tag1"}, {id:2, name: "tag2"}
   const pathname = usePathname();
   const router = useRouter();
   const {
@@ -118,6 +119,14 @@ const QuestionForm = () => {
     console.log(payload, "here");
     postQuestion(payload);
   }
+
+  const onKeyPressed = (e: KeyboardEvent) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      if (e.target?.value === "") return;
+      setTags([...tags, e.target?.value]);
+    }
+  };
   const { ref: titleRef, ...rest } = register("title");
   return (
     <div className="my-10">
@@ -185,12 +194,25 @@ const QuestionForm = () => {
           <span className="text-xs">
             Add up to 5 tags to describe what your question is about.
           </span>
-          <div className="md:w-[811px] mt-3">
+          <div className="md:w-[811px] mt-3 flex md:flex-row flex-col">
+            <div className="border-2 overflow-hidden my-6 flex">
+              {tags.map((tag, index) => (
+                <span
+                  className="bg-blue-100 text-blue-600 px-2 py-1 rounded-md mr-2"
+                  key={index}
+                >
+                  {tag}
+                </span>
+              ))}
+            </div>
             <Input
               className="w-full resize-none appearance-none overflow-hidden bg-transparent focus:outline-none"
               id="tags"
               {...register("tags")}
               placeholder="e.g. Is there an R function for finding the index of an element in a vector?"
+              onKeyDown={(e) => {
+                onKeyPressed(e);
+              }}
             />
           </div>
           <Button

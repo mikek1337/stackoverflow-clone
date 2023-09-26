@@ -35,14 +35,14 @@ const PostVote: FC<postvoteProps> = ({
         payload
       );
     },
-    onError: () => {},
-    onSuccess: () => {
+    onError: () => {
       if (currentVote == "DOWN") {
-        setVote((prev) => prev - 1);
+        setVote((prev) => prev + 1);
       } else {
-        setVote((perv) => perv + 1);
+        setVote((perv) => perv - 1);
       }
     },
+    onSuccess: () => {},
   });
 
   const voteAction = (voteType: VoteType) => {
@@ -51,6 +51,11 @@ const PostVote: FC<postvoteProps> = ({
         questionId: postId,
         voteType: voteType,
       };
+      if (currentVote == "DOWN") {
+        setVote((prev) => prev - 1);
+      } else {
+        setVote((perv) => perv + 1);
+      }
       setCurrentVote(voteType);
       postVote(payload);
     }

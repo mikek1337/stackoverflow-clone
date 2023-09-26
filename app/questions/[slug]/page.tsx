@@ -46,13 +46,13 @@ export default async function Page({ params }: { params: { slug: string } }) {
         <div className="md:container">
           <div className="">
             <div className="flex flex-col">
-              <div className="flex md:flex-row flex-col md:items-center mt-2">
+              <div className="flex md:flex-row flex-col md:items-center md:justify-between mt-2">
                 <div className="w-full">
                   <h4 className="md:text-3xl text-xl text-zinc-500">
                     {data?.title}
                   </h4>
                 </div>
-                <div className="place-self-end">
+                <div className="self-end">
                   <AddQuestion />
                 </div>
               </div>
@@ -111,7 +111,7 @@ export default async function Page({ params }: { params: { slug: string } }) {
           </div>
           <div className="my-10">
             <hr />
-            <Comment quesionId={data?.id || ""} />
+            <Comment contentId={data?.id || ""} type="question" />
           </div>
           <div>
             <div className="my-3 flex justify-between">

@@ -4,8 +4,8 @@ function CustomCodeRenderer({ data }: any) {
   data;
 
   return (
-    <pre className="rounded-md p-4">
-      <code className="text-sm">{data.code}</code>
+    <pre className="rounded-md p-4 whitespace-break-spaces md:whitespace-normal">
+      <code className="text-sm w-[400px]">{data.code}</code>
     </pre>
   );
 }
