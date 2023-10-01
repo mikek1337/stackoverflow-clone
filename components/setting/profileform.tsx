@@ -85,7 +85,7 @@ const ProfileForm: FC<ProfileFormProps> = ({ user }: ProfileFormProps) => {
             <div className="border-2 rounded-md p-3 ">
               <div className="p-3 my-6 overflow-clip h-">
                 <span>Profile image</span>
-                <div className=" w-[200px] h-[200px]">
+                <div className=" md:w-[200px] md:h-[200px] w-[150px] h-[150px] ">
                   <Image
                     src={filePath || ""}
                     alt="user pic"
@@ -108,7 +108,7 @@ const ProfileForm: FC<ProfileFormProps> = ({ user }: ProfileFormProps) => {
                   value={filePath}
                 />
               </div>
-              <div className="w-[400px]">
+              <div className="md:w-[400px] w-[300px]">
                 <label htmlFor="username">Display name</label>
                 <Input
                   type="text"
@@ -126,7 +126,7 @@ const ProfileForm: FC<ProfileFormProps> = ({ user }: ProfileFormProps) => {
                   Not shown publicly
                 </span>
               </div>
-              <div className="w-[400px]">
+              <div className="md:w-[400px] w-[300px]">
                 <label htmlFor="name">Name</label>
                 <Input
                   type="text"

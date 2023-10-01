@@ -8,7 +8,7 @@ export default async function Home() {
   const session = await getAuthSession();
   session?.user ? redirect("/questions") : null;
   return (
-    <div className="container mx-auto flex w-full flex-col justify-center top-72 relative space-y-6 sm:w-[800px] ">
+    <div className="container mx-auto flex w-full flex-col justify-center md:top-72 top-44 relative space-y-6 sm:w-[800px] ">
       <div className="flex flex-col space-y-2 text-center gap-2">
         <h1 className="sm:text-5xl text-2xl font-bold text-center">
           Welcome to Stackoverflow clone
@@ -21,7 +21,7 @@ export default async function Home() {
           href="\questions"
           className={cn(
             buttonVariants({ variant: "default" }),
-            "w-[500px] mx-auto"
+            "md:w-[500px] w-fit mx-auto"
           )}
         >
           Get Started

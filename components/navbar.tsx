@@ -4,12 +4,52 @@ import { Input } from "./ui/input";
 import { buttonVariants } from "./ui/button";
 import { UserAccountNav } from "./usernavmenu";
 import { getAuthSession } from "@/lib/auth";
+import { Icons } from "@/components/icons";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "./ui/dropdown-menu";
+import { cn } from "@/lib/utils";
 
 const NavBar = async () => {
   const data = await getAuthSession();
   return (
     <div className="pt-2 border-b-2 w-full ">
-      <ul className="flex justify-center items-center gap-4">
+      <ul className="flex md:justify-center justify-evenly items-center gap-4 ">
+        <li className="md:hidden block w-fit">
+          <DropdownMenu>
+            <DropdownMenuTrigger>
+              <Icons.menuIcon />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuItem>
+                <Link href="/">Home</Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <div className="mt-1">
+                  <h6 className="">Public</h6>
+                </div>
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <Link href="/questions" className={cn("active:bg-zinc-200")}>
+                  Questions
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <Link href="/tags" className={cn("active:bg-zinc-200")}>
+                  Tags
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <Link href="/users" className={cn("active:bg-zinc-200")}>
+                  Users
+                </Link>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </li>
         <li className="w-fit ">
           <div className="w-40 h-fit">
             <Link href="/">
@@ -17,13 +57,11 @@ const NavBar = async () => {
             </Link>
           </div>
         </li>
-        <li className="w-fit">
-          <div>
-            <Link href="#">About</Link>
-          </div>
-        </li>
-        <li className=" md:w-full w-20">
+        <li className=" md:w-full w-20 md:block hidden">
           <Input type="search" placeholder="Search..." />
+        </li>
+        <li className="md:hidden block w-fit">
+          <Icons.search className="text-zinc-700 w-auto" />
         </li>
         {!data && (
           <li className="flex gap-1 justify-end w-fit">

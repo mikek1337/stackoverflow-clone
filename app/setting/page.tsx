@@ -13,7 +13,9 @@ const page = async () => {
   return (
     <div>
       <div className="mb-3">
-        <h2 className="text-2xl text-zinc-800 py-3">Edit your profile</h2>
+        <h2 className="text-2xl text-zinc-800 py-3 font-bold md:font-normal">
+          Edit your profile
+        </h2>
         <hr />
       </div>
       <div>

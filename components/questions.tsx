@@ -52,6 +52,15 @@ const Questions: FC<questionsProps> = ({ questionType, ...props }) => {
                   </p>
                 </div>
               </Link>
+              <div>
+                <p className="text-sm truncate">
+                  {
+                    value.problemDetail.blocks.find(
+                      (val) => val.type === "paragraph"
+                    )?.data
+                  }
+                </p>
+              </div>
               <div className="flex justify-between  px-5 w-full mt-5">
                 <div className="w-fit">
                   <Badge

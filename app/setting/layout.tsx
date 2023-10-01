@@ -21,7 +21,7 @@ const SettingLayout = async ({ children }: { children: React.ReactNode }) => {
       <SideMenu />
       <div>
         <ProfileHeader user={user} />
-        <div className="flex gap-10">
+        <div className="flex md:gap-10 gap-1 md:flex-row flex-col">
           <SettingMenu />
           {children}
         </div>
