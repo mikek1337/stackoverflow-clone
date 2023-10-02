@@ -50,8 +50,8 @@ const NavBar = async () => {
             </DropdownMenuContent>
           </DropdownMenu>
         </li>
-        <li className="w-fit ">
-          <div className="w-40 h-fit">
+        <li className="w-fit md:block flex items-center">
+          <div className="w-40 h-fit ">
             <Link href="/">
               <Image src="/logo.svg" alt="logo" width="10" height="20" />
             </Link>
@@ -64,16 +64,23 @@ const NavBar = async () => {
           <Icons.search className="text-zinc-700 w-auto" />
         </li>
         {!data && (
-          <li className="flex gap-1 justify-end w-fit">
+          <li className="flex gap-1 justify-end w-fit ">
             <Link
               href="/login"
-              className={buttonVariants({ variant: "default" })}
+              className={cn(
+                buttonVariants({ variant: "ghost" }),
+                "md:block hidden"
+              )}
             >
-              Login
+              <span className="md:block hidden">Login</span>
+              <Icons.login className="md:hidden block w-5 h-5" />
             </Link>
             <Link
               href="/signup"
-              className={buttonVariants({ variant: "ghost" })}
+              className={cn(
+                buttonVariants({ variant: "default" }),
+                "text-sm w-fit font-bold"
+              )}
             >
               SignUp
             </Link>

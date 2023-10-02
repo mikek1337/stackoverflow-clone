@@ -81,11 +81,11 @@ export default async function Page({ params }: { params: { slug: string } }) {
                   />
                 </div>
               </div>
-              <div className="w-full">
+              <div className="md:w-full w-[300px]">
                 <EditorOutput content={data?.problemDetail} />
               </div>
             </div>
-            <div>
+            <div className="w-full">
               <EditorOutput content={data?.triedMethods} />
             </div>
             <div className="flex">
