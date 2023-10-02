@@ -7,13 +7,13 @@ export async function POST(req: Request) {
         const session = await getAuthSession();
         if (session?.user) {
             const data = await req.json();
-            const { comment, questionId } = CommentPostValidator.parse(data);
+            const { comment, questionId, userId } = CommentPostValidator.parse(data);
 
             await db.questionComment.create({
                 data: {
                     comment: comment,
                     questionId: questionId,
-                    userId: session.user.id,
+                    userId: userId,
                 },
             });
             return new Response("OK");

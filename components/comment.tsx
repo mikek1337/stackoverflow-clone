@@ -4,12 +4,14 @@ import { formatTimeToNow } from "@/lib/utils";
 import { FC, Suspense } from "react";
 import AddComment from "./addcomment";
 import AddAnswerComment from "./addanswercomment";
+import { getAuthSession } from "@/lib/auth";
 interface CommentProps {
   contentId: string;
   type: "question" | "answer";
 }
 const Comment: FC<CommentProps> = async ({ contentId, type }: CommentProps) => {
   let comments: any[] = [];
+  const session = await getAuthSession();
   if (type === "question") {
     comments = await db.questionComment.findMany({
       where: {
@@ -48,8 +50,15 @@ const Comment: FC<CommentProps> = async ({ contentId, type }: CommentProps) => {
           </p>
         </div>
       ))}
-      {type === "question" && <AddComment questionId={contentId} />}
-      {type === "answer" && <AddAnswerComment answerId={contentId} />}
+      {type === "question" && (
+        <AddComment questionId={contentId} userId={session?.user.id || ""} />
+      )}
+      {type === "answer" && (
+        <AddAnswerComment
+          answerId={contentId}
+          userId={session?.user.id || ""}
+        />
+      )}
     </Suspense>
   );
 };

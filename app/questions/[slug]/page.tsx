@@ -11,6 +11,8 @@ import AddQuestion from "@/components/addquestion";
 import { db } from "@/lib/db";
 import { getAuthSession } from "@/lib/auth";
 import Comment from "@/components/comment";
+import Link from "next/link";
+import { buttonVariants } from "@/components/ui/button";
 
 export default async function Page({ params }: { params: { slug: string } }) {
   const session = await getAuthSession();

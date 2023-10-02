@@ -6,16 +6,18 @@ import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { CommentPostValidator } from "@/lib/validators/post";
 import { toast } from "@/hooks/use-toast";
+import { redirect } from "next/navigation";
 interface AddCommentProps {
   questionId: string;
+  userId: string | "";
 }
 
-const AddComment: FC<AddCommentProps> = ({ questionId }) => {
+const AddComment: FC<AddCommentProps> = ({ questionId, userId }) => {
   const [hide, setHide] = useState<boolean>(true);
   const [comment, setComment] = useState<string>("");
   const { mutate: postComment } = useMutation({
     mutationFn: async ({ comment, questionId }: CommentPostValidator) => {
-      const payload: CommentPostValidator = { comment, questionId };
+      const payload: CommentPostValidator = { comment, questionId, userId };
       const { data } = await axios.post("/api/comment/question/post", payload);
       return data;
     },
@@ -39,9 +41,19 @@ const AddComment: FC<AddCommentProps> = ({ questionId }) => {
       const commentPost: CommentPostValidator = {
         comment: comment,
         questionId: questionId,
+        userId: userId,
       };
       postComment(commentPost);
     }
+  };
+  const addComment = () => {
+    if (userId == "") {
+      return toast({
+        title: "Login to add comment",
+        variant: "destructive",
+      });
+    }
+    setHide(false);
   };
   return (
     <div>
@@ -49,7 +61,7 @@ const AddComment: FC<AddCommentProps> = ({ questionId }) => {
         className="w-fit text-zinc-500"
         variant="link"
         hidden={!hide}
-        onClick={() => setHide(false)}
+        onClick={addComment}
       >
         Add comment
       </Button>

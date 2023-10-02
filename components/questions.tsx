@@ -27,39 +27,40 @@ const Questions: FC<questionsProps> = ({ questionType, ...props }) => {
         <p className="text-zinc-300 text-center text-xl">No Questions</p>
       </div>
     );
+  if (isLoading) return <Loading />;
   return (
     <div className="md:container">
       {data?.map((value) => (
         <Suspense fallback={<Loading />} key={value.id}>
           <hr className="my-10" />
-          <div className="flex md:flex-row flex-col justify-center md:items-center md:pr-10">
-            <div className="flex md:flex-col flex-row text-zinc-300 md:w-24 w-fit  md:text-sm text-xs gap-1 px-2">
-              <span className="text-zinc-800">{value.votes.length} votes</span>
-              <span className="">{value.answers.length} answers</span>
-              <span>3 views</span>
+          <div className="flex md:flex-row flex-col justify-center md:items-center md:pr-10 gap-3">
+            <div className="flex md:flex-col flex-row text-zinc-300 md:w-24 w-fit  md:text-sm text-xs gap-3 px-2">
+              <span className="text-zinc-800">
+                {value.votes.length}&nbsp;votes
+              </span>
+              <p className="">{value.answers.length}&nbsp;answers</p>
+              <span>3&nbsp;views</span>
             </div>
             <div className="flex flex-col">
-              <Link
-                href={`questions/${value.id}`}
-                className={cn(
-                  buttonVariants({ variant: "link" }),
-                  "w-fit text-blue-500 text-lg"
-                )}
-              >
-                <div className="w-full overflow-hidden">
-                  <p className="text-sm md:text-lg text-ellipsis">
-                    {value.title}
+              <div className="flex gap-3 flex-col ">
+                <Link
+                  href={`questions/${value.id}`}
+                  className={cn(
+                    buttonVariants({ variant: "link" }),
+                    "w-fit text-blue-500 md:text-lg text-xs"
+                  )}
+                >
+                  {value.title}
+                </Link>
+                <div className="ml-5 md:w-[600px] w-[300px]">
+                  <p className="md:text-sm text-xs truncate">
+                    {
+                      value.problemDetail.blocks.find(
+                        (val) => val.type === "paragraph"
+                      )?.data.text
+                    }
                   </p>
                 </div>
-              </Link>
-              <div>
-                <p className="text-sm truncate">
-                  {
-                    value.problemDetail.blocks.find(
-                      (val) => val.type === "paragraph"
-                    )?.data
-                  }
-                </p>
               </div>
               <div className="flex justify-between  px-5 w-full mt-5">
                 <div className="w-fit">

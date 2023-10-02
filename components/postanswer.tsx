@@ -25,7 +25,7 @@ const PostAnswer: FC<PostAnswerProps> = async ({
       {session?.user && <AnswerForm questionId={questionId} />}
       {!session?.user && (
         <Link
-          className={cn(buttonVariants({ variant: "default" }), "w-fit")}
+          className={cn(buttonVariants({ variant: "default" }), "w-fit mb-4")}
           href="/login"
         >
           Login to answer

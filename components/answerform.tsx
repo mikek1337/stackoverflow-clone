@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import { FC, useRef } from "react";
 import Editor from "./editor";
 import { Button } from "./ui/button";
@@ -67,7 +67,7 @@ const AnswerForm: FC<answerformProps> = ({ questionId }: answerformProps) => {
         <div>
           <div className="my-3">
             <h3 className="text-xl">Your Answer</h3>
-            <div className="my-3 border-2">
+            <div className="my-3 border-2 px-5">
               <Editor refer={ref} />
             </div>
             <div className="flex justify-start">

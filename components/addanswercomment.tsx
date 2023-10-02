@@ -8,16 +8,18 @@ import axios from "axios";
 import { toast } from "@/hooks/use-toast";
 interface AddAnswerCommentProps {
   answerId: string;
+  userId: string;
 }
 
 const AddAnswerComment: FC<AddAnswerCommentProps> = ({
   answerId,
+  userId,
 }: AddAnswerCommentProps) => {
   const [hide, setHide] = useState<boolean>(true);
   const [comment, setComment] = useState<string>("");
   const { mutate: postComment } = useMutation({
     mutationFn: async ({ comment, questionId }: CommentPostValidator) => {
-      const payload: CommentPostValidator = { comment, questionId };
+      const payload: CommentPostValidator = { comment, questionId, userId };
       const { data } = await axios.post("/api/comment/answer/post", payload);
       return data;
     },
@@ -36,14 +38,25 @@ const AddAnswerComment: FC<AddAnswerCommentProps> = ({
       });
     },
   });
+
   const onPost = () => {
     if (comment != "") {
       const commentPost: CommentPostValidator = {
         comment: comment,
         questionId: answerId,
+        userId: userId,
       };
       postComment(commentPost);
     }
+  };
+  const addComment = () => {
+    if (userId == "") {
+      return toast({
+        title: "Login to add comment",
+        variant: "destructive",
+      });
+    }
+    setHide(false);
   };
   return (
     <div>
@@ -51,7 +64,7 @@ const AddAnswerComment: FC<AddAnswerCommentProps> = ({
         className="w-fit text-zinc-500"
         variant="link"
         hidden={!hide}
-        onClick={() => setHide(false)}
+        onClick={addComment}
       >
         Add comment
       </Button>
