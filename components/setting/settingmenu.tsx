@@ -8,14 +8,15 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
+import { Icons } from "../icons";
 
 const SettingMenu: FC = () => {
   return (
-    <div className="flex flex-col md:gap-3 max-w-max mx-10">
-      <div className="hidden md:block w-full">
+    <div className="flex flex-col gap-3 max-w-max mx-10">
+      {/*       <div className=" w-full">
         <DropdownMenu>
           <DropdownMenuTrigger className="w-full text-center">
-            Open
+            <Icons.menuIcon />
           </DropdownMenuTrigger>
           <DropdownMenuContent>
             <DropdownMenuLabel>Personal information</DropdownMenuLabel>
@@ -33,8 +34,8 @@ const SettingMenu: FC = () => {
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
-      </div>
-      <div className="md:hidden block">
+      </div> */}
+      <div className="">
         <h6 className="text-sm font-semibold text-zinc-800 my-3">
           Personal information
         </h6>

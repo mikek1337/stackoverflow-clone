@@ -51,7 +51,7 @@ const PostVote: FC<postvoteProps> = ({
         questionId: postId,
         voteType: voteType,
       };
-      if (currentVote == "DOWN") {
+      if (voteType == "DOWN") {
         setVote((prev) => prev - 1);
       } else {
         setVote((perv) => perv + 1);

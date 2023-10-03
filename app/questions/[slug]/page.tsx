@@ -46,15 +46,15 @@ export default async function Page({ params }: { params: { slug: string } }) {
       <div className="flex flex-row">
         <SideMenu />
         <div className="md:container">
-          <div className="">
+          <div className="w-full">
             <div className="flex flex-col">
-              <div className="flex md:flex-row flex-col md:items-center md:justify-between mt-2">
-                <div className="w-full">
-                  <h4 className="md:text-3xl text-xl text-zinc-500">
+              <div className="flex md:flex-row flex-col md:items-center md:justify-between mt-2 ">
+                <div className="">
+                  <p className="md:text-3xl text-xl text-zinc-500">
                     {data?.title}
-                  </h4>
+                  </p>
                 </div>
-                <div className="self-end">
+                <div className="md:self-start md:w-auto w-fit">
                   <AddQuestion />
                 </div>
               </div>

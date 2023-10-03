@@ -8,10 +8,14 @@ export async function GET(req: Request) {
         where: {
             OR: [
                 {
-                    title: searchParam
+                    title: {
+                        startsWith: searchParam
+                    }
                 },
                 {
-                    tags: searchParam
+                    tags: {
+                        startsWith: searchParam
+                    }
                 }
             ]
         },

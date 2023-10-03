@@ -76,72 +76,68 @@ const ProfileForm: FC<ProfileFormProps> = ({ user }: ProfileFormProps) => {
   return (
     <div>
       <div>
-        <div>
-          <form
-            id="user-profile"
-            className="my-3"
-            onSubmit={handleSubmit(submit)}
-          >
-            <div className="border-2 rounded-md p-3 ">
-              <div className="p-3 my-6 overflow-clip h-">
-                <span>Profile image</span>
-                <div className=" md:w-[200px] md:h-[200px] w-[150px] h-[150px] ">
-                  <Image
-                    src={filePath || ""}
-                    alt="user pic"
-                    width={100}
-                    height={100}
-                  />
-                  <UploadButton
-                    endpoint="imageUploader"
-                    onClientUploadComplete={(res) => {
-                      changeImage(res);
-                    }}
-                    className="relative w-full  z-1 -top-8  text-xs bg-zinc-400 bg-transparent h-fit text-white"
-                  />
-                </div>
-                <Input
-                  type="text"
-                  className="hidden"
-                  id="image"
-                  {...register("imagePath")}
-                  value={filePath}
+        <form
+          id="user-profile"
+          className="my-3"
+          onSubmit={handleSubmit(submit)}
+        >
+          <div className="border-2 rounded-md p-3 ">
+            <div className="p-3 my-6 overflow-clip h-">
+              <span>Profile image</span>
+              <div className=" md:w-[200px] md:h-[200px] w-[150px] h-[150px] ">
+                <Image
+                  src={filePath || ""}
+                  alt="user pic"
+                  width={100}
+                  height={100}
+                />
+                <UploadButton
+                  endpoint="imageUploader"
+                  onClientUploadComplete={(res) => {
+                    changeImage(res);
+                  }}
+                  className="relative w-full  z-1 -top-8  text-xs bg-zinc-400 bg-transparent h-fit text-white"
                 />
               </div>
-              <div className="md:w-[400px] w-[300px]">
-                <label htmlFor="username">Display name</label>
-                <Input
-                  type="text"
-                  id="username"
-                  className="border-zinc-600 focus:outline-none"
-                  defaultValue={user?.username || ""}
-                  {...register("username")}
-                />
-              </div>
+              <Input
+                type="text"
+                className="hidden"
+                id="image"
+                {...register("imagePath")}
+                value={filePath}
+              />
             </div>
-            <div className="mt-3 p-3 border-2">
-              <div className="flex mt-3">
-                <h3 className=" text-xl">Private information</h3>
-                <span className="text-sm  text-zinc-400">
-                  Not shown publicly
-                </span>
-              </div>
-              <div className="md:w-[400px] w-[300px]">
-                <label htmlFor="name">Name</label>
-                <Input
-                  type="text"
-                  id="name"
-                  className="border-zinc-600"
-                  defaultValue={user?.name || ""}
-                  {...register("name")}
-                />
-              </div>
+            <div className="md:w-[400px] w-[300px]">
+              <label htmlFor="username">Display name</label>
+              <Input
+                type="text"
+                id="username"
+                className="border-zinc-600 focus:outline-none"
+                defaultValue={user?.username || ""}
+                {...register("username")}
+              />
             </div>
-          </form>
-          <Button className="w-fit" form="user-profile">
-            Submit
-          </Button>
-        </div>
+          </div>
+          <div className="mt-3 p-3 border-2">
+            <div className="flex mt-3">
+              <h3 className=" text-xl">Private information</h3>
+              <span className="text-sm  text-zinc-400">Not shown publicly</span>
+            </div>
+            <div className="md:w-[400px] w-[300px]">
+              <label htmlFor="name">Name</label>
+              <Input
+                type="text"
+                id="name"
+                className="border-zinc-600"
+                defaultValue={user?.name || ""}
+                {...register("name")}
+              />
+            </div>
+          </div>
+        </form>
+        <Button className="w-fit" form="user-profile">
+          Submit
+        </Button>
       </div>
     </div>
   );

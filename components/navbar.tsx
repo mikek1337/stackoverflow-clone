@@ -12,6 +12,7 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import { cn } from "@/lib/utils";
+import SearchBar from "./searchbar";
 
 const NavBar = async () => {
   const data = await getAuthSession();
@@ -58,7 +59,7 @@ const NavBar = async () => {
           </div>
         </li>
         <li className=" md:w-full w-20 md:block hidden">
-          <Input type="search" placeholder="Search..." />
+          <SearchBar />
         </li>
         <li className="md:hidden block w-fit">
           <Icons.search className="text-zinc-700 w-auto" />

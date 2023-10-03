@@ -1,5 +1,5 @@
 "use client";
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { Command, CommandInput, CommandList } from "./ui/command";
 import { CommandEmpty, CommandGroup, CommandItem } from "cmdk";
 import { useQuery } from "@tanstack/react-query";
@@ -11,7 +11,7 @@ import { Badge } from "./ui/badge";
 
 interface searchbarProps {}
 
-const searchbar: FC<searchbarProps> = ({}) => {
+const SearchBar: FC<searchbarProps> = ({}) => {
   const [input, setInput] = useState<string>("");
   const router = useRouter();
   const {
@@ -30,22 +30,29 @@ const searchbar: FC<searchbarProps> = ({}) => {
     queryKey: ["search-key"],
     enabled: false,
   });
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      refetch();
+    }, 2000);
+    return () => clearTimeout(timeout);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [input]);
   return (
     <div>
-      <Command>
+      <Command className="relative rounded-lg border  z-50 overflow-visible">
         <CommandInput
           placeholder="Search..."
-          className="outline-none boarder-none focus:border-none focus:outline-none ring-0"
+          className="outline-none boarder-none focus:border-none focus:outline-none ring-0 "
           onValueChange={(text) => {
             setInput(text);
           }}
           value={input}
         />
         {input.length > 0 && (
-          <CommandList className="absolute bg-white top-full inset-x-0 shadow rounded-b-md">
+          <CommandList className="absolute bg-white  inset-x-0 top-10 shadow rounded-b-md w-full ">
             {isFetched && <CommandEmpty>No result found.</CommandEmpty>}
             {(queryResults?.length ?? 0) > 0 ? (
-              <CommandGroup heading="Suggestion">
+              <CommandGroup heading="Suggestion" className="p-1">
                 {queryResults?.map((question) => (
                   <CommandItem
                     onSelect={(e) => {
@@ -55,8 +62,12 @@ const searchbar: FC<searchbarProps> = ({}) => {
                     value={question.title}
                     key={question.id}
                   >
-                    <a href={`/question/${question.id}`}>{question.title}</a>
-                    <Badge variant="outline">{question.tags}</Badge>
+                    <div className="flex container my-1">
+                      <a href={`/questions/${question.id}`}>{question.title}</a>
+                      <Badge variant="default" className="w-fit">
+                        {question.tags}
+                      </Badge>
+                    </div>
                   </CommandItem>
                 ))}
               </CommandGroup>
@@ -68,4 +79,4 @@ const searchbar: FC<searchbarProps> = ({}) => {
   );
 };
 
-export default searchbar;
+export default SearchBar;

@@ -1,3 +1,4 @@
+import NavBar from "@/components/navbar";
 import ProfileHeader from "@/components/setting/profileheader";
 import SettingMenu from "@/components/setting/settingmenu";
 import SideMenu from "@/components/sidemenu";
@@ -9,7 +10,6 @@ const SettingLayout = async ({ children }: { children: React.ReactNode }) => {
   const session = await getAuthSession();
   if (!session) {
     redirect("/login");
-    return <div></div>;
   }
   const user = await db.user.findUnique({
     where: {
@@ -17,11 +17,11 @@ const SettingLayout = async ({ children }: { children: React.ReactNode }) => {
     },
   });
   return (
-    <div className="flex ">
+    <div className="flex w-full">
       <SideMenu />
       <div>
         <ProfileHeader user={user} />
-        <div className="flex md:gap-10 gap-1 md:flex-row flex-col">
+        <div className="flex gap-10  flex-row ">
           <SettingMenu />
           {children}
         </div>
