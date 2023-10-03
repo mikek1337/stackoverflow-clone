@@ -16,6 +16,7 @@ import { Input } from "@/components/ui/input";
 import { z } from "zod";
 import { useRouter } from "next/navigation";
 import { toast } from "@/hooks/use-toast";
+import TextareaAutoSize from "react-textarea-autosize";
 
 type FormData = z.infer<typeof UserPostValidator>;
 
@@ -29,6 +30,10 @@ const Page = () => {
       username: "mikias",
       name: "mikias",
       imagePath: "",
+      github: "",
+      linkden: "",
+      twitter: "",
+      location: "",
     },
   });
   const changeImage = (res: UploadFileResponse[] | undefined) => {
@@ -38,11 +43,24 @@ const Page = () => {
   };
 
   const { mutate: updateUser } = useMutation({
-    mutationFn: async ({ username, name, imagePath }: UserPostValidator) => {
-      const payload: UserPostValidator = { username, name, imagePath };
-
-      const { data } = await axios.patch("/api/user/edit", payload);
-      return data;
+    mutationFn: async (data: FormData) => {
+      const username = data.username;
+      const name = data.name;
+      const imagePath = filePath;
+      const location = data.location;
+      const linkden = data.linkden;
+      const twitter = data.twitter;
+      const github = data.github;
+      const payload: UserPostValidator = {
+        username,
+        name,
+        imagePath,
+        location,
+        github,
+        linkden,
+        twitter,
+      };
+      updateUser(payload);
     },
     onError: () => {
       toast({
@@ -75,14 +93,22 @@ const Page = () => {
       id: session?.user?.id,
     },
   }); */
-  const submit = async (data: FormData) => {
+  let submit = async (data: FormData) => {
     const username = data.username;
     const name = data.name;
     const imagePath = filePath;
+    const location = data.location;
+    const linkden = data.linkden;
+    const twitter = data.twitter;
+    const github = data.github;
     const payload: UserPostValidator = {
       username,
       name,
       imagePath,
+      location,
+      github,
+      linkden,
+      twitter,
     };
     updateUser(payload);
   };
@@ -103,7 +129,7 @@ const Page = () => {
           />
         </div>
       </div>
-      <div>
+      <div className="mt-28">
         <form onSubmit={handleSubmit(submit)}>
           <div className="hidden">
             <input type="text" {...register("imagePath")} />
@@ -134,39 +160,58 @@ const Page = () => {
               />
             </div>
           </div>
-          <div>
-            <h3>Address</h3>
-            <div className="grid grid-cols-3 w-full">
-              <div className="md:w-[400px] w-[300px]">
-                <label htmlFor="address">Address</label>
+          <div className="md:w-[400px] w-[300px] mt-3">
+            <label htmlFor="location">Location</label>
+            <Input
+              type="text"
+              id="location"
+              className="border-zinc-600"
+              defaultValue={data?.location || ""}
+              {...register("location")}
+            />
+          </div>
+          <div className="mt-5">
+            <h3 className="text-zinc-700 text-xl">Socals</h3>
+            <div className="grid grid-cols-3 w-full gap-5">
+              <div className="md:w-[300px] w-[300px]">
+                <label htmlFor="github">Github</label>
                 <Input
                   type="text"
-                  id="address"
+                  id="github"
                   className="border-zinc-600"
-                  defaultValue={data?.address || ""}
-                  {...register("address")}
+                  defaultValue={data?.location || ""}
+                  {...register("github")}
                 />
               </div>
-              <div className="md:w-[400px] w-[300px]">
-                <label htmlFor="city">City</label>
+              <div className="md:w-[300px] w-[300px]">
+                <label htmlFor="linkden">Linkden</label>
                 <Input
                   type="text"
-                  id="city"
+                  id="linkden"
                   className="border-zinc-600"
-                  defaultValue={data?.city || ""}
-                  {...register("city")}
+                  defaultValue={data?.linkden || ""}
+                  {...register("linkden")}
                 />
+              </div>
+              <div className="md:w-[300px] w-[300px]">
+                <label htmlFor="twitter">Twitter</label>
+                <Input
+                  type="text"
+                  id="twitter"
+                  className="border-zinc-600"
+                  defaultValue={data?.twitter || ""}
+                  {...register("twitter")}
+                />
+              </div>
             </div>
-            <div className="md:w-[400px] w-[300px]">
-              <label htmlFor="state">State</label>
-              <Input
-                type="text"
-                id="state"
-                className="border-zinc-600"
-                defaultValue={data?.state || ""}
-                {...register("state")}
-              />
-              </div>
+          </div>
+          <div className="w-full h-[500px] mt-3">
+            <label>About</label>
+            <TextareaAutoSize
+              placeholder="Bio..."
+              className="border-b-2  text-2xl focus:outline-none p-4"
+              rows={100}
+            />
           </div>
         </form>
       </div>

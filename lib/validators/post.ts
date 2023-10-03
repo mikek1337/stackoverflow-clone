@@ -30,7 +30,13 @@ export const UserPostValidator = z.object({
         .string()
         .min(3, { message: "name needs to be at least 3 characters" })
         .nonempty({ message: "username required" }),
-    imagePath: z.string()
+    imagePath: z.string(),
+    location: z.string(),
+    github: z.string(),
+    linkden: z.string(),
+    twitter: z.string(),
+
+
 });
 
 export const CommentPostValidator = z.object({
