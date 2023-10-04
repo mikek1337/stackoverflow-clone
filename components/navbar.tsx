@@ -12,7 +12,7 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import { cn } from "@/lib/utils";
-import SearchBar from "./searchbar";
+import SearchBar from "./searchquestionbar";
 
 const NavBar = async () => {
   const data = await getAuthSession();

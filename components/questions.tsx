@@ -52,8 +52,8 @@ const Questions: FC<questionsProps> = ({ questionType, ...props }) => {
                 >
                   {value.title}
                 </Link>
-                <div className="ml-5 md:w-[600px] w-[300px]">
-                  <p className="md:text-sm text-xs truncate">
+                <div className="ml-5 md:w-[600px] w-[300px] line-clamp-2">
+                  <p className="md:text-sm text-xs">
                     {
                       value.problemDetail.blocks.find(
                         (val) => val.type === "paragraph"

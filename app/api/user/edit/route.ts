@@ -9,7 +9,6 @@ export async function PATCH(req: Request) {
 
             const data = await req.json();
             const payload = UserPostValidator.parse(data);
-            console.log(data);
             await db.user.update({
                 where: {
                     id: session.user.id
@@ -17,7 +16,13 @@ export async function PATCH(req: Request) {
                 data: {
                     username: payload.username,
                     image: payload.imagePath,
-                    name: payload.name
+                    name: payload.name,
+                    location: payload.location,
+                    github: payload.github,
+                    linkden: payload.linkden,
+                    twitter: payload.twitter,
+                    about: payload.about
+
                 }
             });
 

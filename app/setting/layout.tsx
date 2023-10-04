@@ -1,4 +1,5 @@
 import NavBar from "@/components/navbar";
+
 import ProfileHeader from "@/components/setting/profileheader";
 import SettingMenu from "@/components/setting/settingmenu";
 import SideMenu from "@/components/sidemenu";
@@ -6,7 +7,7 @@ import { getAuthSession } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { redirect } from "next/navigation";
 
-const SettingLayout = async ({ children }: { children: React.ReactNode }) => {
+const Layout = async ({ children }: { children: React.ReactNode }) => {
   const session = await getAuthSession();
   if (!session) {
     redirect("/login");
@@ -17,16 +18,20 @@ const SettingLayout = async ({ children }: { children: React.ReactNode }) => {
     },
   });
   return (
-    <div className="flex w-full">
-      <SideMenu />
-      <div>
-        <ProfileHeader user={user} />
-        <div className="flex gap-10  flex-row ">
-          <SettingMenu />
-          {children}
+    <div>
+      <div className="flex w-full">
+        <SideMenu />
+        <div>
+          <ProfileHeader user={user} />
+          <div className="flex gap-10  flex-row ">
+            <div className="w-fit">
+              <SettingMenu />
+            </div>
+            <div>{children}</div>
+          </div>
         </div>
       </div>
     </div>
   );
 };
-export default SettingLayout;
+export default Layout;

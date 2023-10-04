@@ -13,7 +13,6 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: "Stackoverflow-clone",
   description: "simple project for alx",
-  icons: Icons.logo,
 };
 
 export default function RootLayout({
@@ -32,8 +31,8 @@ export default function RootLayout({
 
             {children}
           </div>
-          {authModal}
         </Providers>
+        {authModal}
         <Toaster />
       </body>
     </html>

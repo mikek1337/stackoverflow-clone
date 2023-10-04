@@ -3,7 +3,7 @@ import { User } from "@prisma/client";
 import Image from "next/image";
 import { FC, MouseEvent, useRef, useState } from "react";
 import { Input } from "../ui/input";
-import { Button } from "../ui/button";
+import { Button, buttonVariants } from "../ui/button";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -15,30 +15,59 @@ import { useRouter } from "next/navigation";
 import { OurFileRouter } from "@/app/api/uploadthing/core";
 import { generateComponents } from "@uploadthing/react";
 import "@uploadthing/react/styles.css";
-import { UploadButton } from "@uploadthing/react";
 import { UploadFileResponse } from "uploadthing/client";
+import TextareaAutoSize from "react-textarea-autosize";
+import { cn } from "@/lib/utils";
 interface ProfileFormProps {
-  user: User | null;
+  data: User | null;
 }
 type FormData = z.infer<typeof UserPostValidator>;
-const ProfileForm: FC<ProfileFormProps> = ({ user }: ProfileFormProps) => {
-  const [filePath, setFilePath] = useState<string>(user?.image || "");
+const ProfileForm: FC<ProfileFormProps> = ({ data }: ProfileFormProps) => {
   const { UploadButton, UploadDropzone, Uploader } =
     generateComponents<OurFileRouter>();
 
+  const [filePath, setFilePath] = useState<string>(data?.image || "");
   const router = useRouter();
   const { register, handleSubmit } = useForm<FormData>({
     resolver: zodResolver(UserPostValidator),
     defaultValues: {
-      username: user?.username || "",
-      name: user?.name || "",
-      imagePath: user?.image || "",
+      username: data?.username || "",
+      name: data?.name || "",
+      imagePath: filePath,
+      github: data?.github || "",
+      linkden: data?.linkden || "",
+      twitter: data?.twitter || "",
+      location: data?.location || "",
+      about: data?.about || "",
     },
   });
-  const { mutate: updateUser } = useMutation({
-    mutationFn: async ({ username, name, imagePath }: UserPostValidator) => {
-      const payload: UserPostValidator = { username, name, imagePath };
+  const changeImage = (res: UploadFileResponse[] | undefined) => {
+    if (res instanceof Array) {
+      setFilePath(res[0].url);
+    }
+  };
 
+  const { mutate: updateUser } = useMutation({
+    mutationFn: async ({
+      username,
+      name,
+      imagePath,
+      location,
+      github,
+      linkden,
+      twitter,
+      about,
+    }: UserPostValidator) => {
+      const payload: UserPostValidator = {
+        username,
+        name,
+        imagePath,
+        location,
+        github,
+        linkden,
+        twitter,
+        about,
+      };
       const { data } = await axios.patch("/api/user/edit", payload);
       return data;
     },
@@ -57,66 +86,81 @@ const ProfileForm: FC<ProfileFormProps> = ({ user }: ProfileFormProps) => {
     },
   });
 
-  const submit = async (data: FormData) => {
+  /*   const session = await getAuthSession();
+  const user = await db.user.findUnique({
+    where: {
+      id: session?.user?.id,
+    },
+  }); */
+  let submit = async (data: FormData) => {
     const username = data.username;
     const name = data.name;
     const imagePath = filePath;
+    const location = data.location;
+    const linkden = data.linkden;
+    const twitter = data.twitter;
+    const github = data.github;
+    const about = data.about;
     const payload: UserPostValidator = {
       username,
       name,
       imagePath,
+      location,
+      github,
+      linkden,
+      twitter,
+      about,
     };
     updateUser(payload);
   };
-  const changeImage = (res: UploadFileResponse[] | undefined) => {
-    if (res instanceof Array) {
-      setFilePath(res[0].url);
-    }
-  };
   return (
-    <div>
-      <div>
-        <form
-          id="user-profile"
-          className="my-3"
-          onSubmit={handleSubmit(submit)}
-        >
-          <div className="border-2 rounded-md p-3 ">
-            <div className="p-3 my-6 overflow-clip h-">
-              <span>Profile image</span>
-              <div className=" md:w-[200px] md:h-[200px] w-[150px] h-[150px] ">
-                <Image
-                  src={filePath || ""}
-                  alt="user pic"
-                  width={100}
-                  height={100}
-                />
-                <UploadButton
-                  endpoint="imageUploader"
-                  onClientUploadComplete={(res) => {
-                    changeImage(res);
-                  }}
-                  className="relative w-full  z-1 -top-8  text-xs bg-zinc-400 bg-transparent h-fit text-white"
-                />
-              </div>
-              <Input
-                type="text"
-                className="hidden"
-                id="image"
-                {...register("imagePath")}
-                value={filePath}
-              />
-            </div>
-            <div className="md:w-[400px] w-[300px]">
-              <label htmlFor="username">Display name</label>
-              <Input
-                type="text"
-                id="username"
-                className="border-zinc-600 focus:outline-none"
-                defaultValue={user?.username || ""}
-                {...register("username")}
-              />
-            </div>
+    <div className="w-fit">
+      <div className="relative w-32 h-fit object-contain flex flex-col">
+        <Image src={filePath || ""} width="70" height="70" alt="" />
+        <div className="absolute inset-y-24 w-full h-fit">
+          <UploadButton
+            className={cn(
+              buttonVariants({ variant: "default" }),
+              "  z-10 backdrop-filter backdrop-blur-sm bg-zinc-700 bg-opacity-50 hover:bg-opacity-60"
+            )}
+            endpoint="imageUploader"
+            onClientUploadComplete={(res: UploadFileResponse[] | undefined) => {
+              changeImage(res);
+            }}
+            content={{ allowedContent: "image" }}
+            appearance={{
+              button: {
+                height: "30px",
+              },
+              allowedContent: {
+                display: "none",
+              },
+            }}
+          />
+        </div>
+      </div>
+      <div className="mt-10">
+        <form onSubmit={handleSubmit(submit)} id="submit-profile">
+          <div className="hidden">
+            <input type="text" {...register("imagePath")} />
+          </div>
+          <div className="md:w-[400px] w-[300px]">
+            <label htmlFor="username">Display name</label>
+            <Input
+              type="text"
+              id="username"
+              className="border-zinc-600 focus:outline-none"
+              {...register("username")}
+            />
+          </div>
+          <div className="md:w-[400px] w-[300px] mt-3">
+            <label htmlFor="location">Location</label>
+            <Input
+              type="text"
+              id="location"
+              className="border-zinc-600"
+              {...register("location")}
+            />
           </div>
           <div className="mt-3 p-3 border-2">
             <div className="flex mt-3">
@@ -129,14 +173,55 @@ const ProfileForm: FC<ProfileFormProps> = ({ user }: ProfileFormProps) => {
                 type="text"
                 id="name"
                 className="border-zinc-600"
-                defaultValue={user?.name || ""}
                 {...register("name")}
               />
             </div>
           </div>
+
+          <div className="mt-5 p-3 border-2 border-zinc-200">
+            <h3 className="text-zinc-700 text-xl">Socals</h3>
+            <div className="grid grid-flow-dense w-full gap-5">
+              <div className="md:w-[400px] w-[300px]">
+                <label htmlFor="github">Github</label>
+                <Input
+                  type="text"
+                  id="github"
+                  className="border-zinc-600"
+                  {...register("github")}
+                />
+              </div>
+              <div className="md:w-[400px] w-[300px]">
+                <label htmlFor="linkden">Linkden</label>
+                <Input
+                  type="text"
+                  id="linkden"
+                  className="border-zinc-600"
+                  {...register("linkden")}
+                />
+              </div>
+              <div className="md:w-[400px] w-[300px]">
+                <label htmlFor="twitter">Twitter</label>
+                <Input
+                  type="text"
+                  id="twitter"
+                  className="border-zinc-600"
+                  {...register("twitter")}
+                />
+              </div>
+            </div>
+          </div>
+          <div className="w-full  mt-3">
+            <label>About</label>
+            <TextareaAutoSize
+              placeholder="Bio..."
+              className="border-b-2  text-2xl focus:outline-none p-4"
+              rows={100}
+              {...register("about")}
+            />
+          </div>
         </form>
-        <Button className="w-fit" form="user-profile">
-          Submit
+        <Button form="submit-profile" type="submit" className="my-5 pb-5 w-fit">
+          Update
         </Button>
       </div>
     </div>

@@ -35,6 +35,7 @@ export const UserPostValidator = z.object({
     github: z.string(),
     linkden: z.string(),
     twitter: z.string(),
+    about: z.string(),
 
 
 });
