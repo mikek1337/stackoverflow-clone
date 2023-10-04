@@ -40,7 +40,7 @@ const Answer: FC<AnswerProps> = ({ data, userId }: AnswerProps) => {
                 }
               />
             </div>
-            <div>
+            <div className="md:w-full w-[300px]">
               <EditorOutput content={answer.content} />
             </div>
           </div>
