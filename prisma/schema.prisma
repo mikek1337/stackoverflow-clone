@@ -127,6 +127,7 @@ model Answer {
   questionId    String          @db.ObjectId
   status        Status?
   question      Question        @relation(fields: [questionId], references: [id])
+  isAnswer      Boolean         @default(false)
   AnswerComment AnswerComment[]
 }
 

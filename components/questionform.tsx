@@ -13,6 +13,8 @@ import { Button, buttonVariants } from "./ui/button";
 import { cn } from "@/lib/utils";
 import Editor from "./editor";
 import axios from "axios";
+import { X } from "lucide-react";
+import { Badge } from "./ui/badge";
 type FormData = z.infer<typeof PostValidator>;
 const QuestionForm = () => {
   const [mounted, setMounted] = useState(false);
@@ -108,11 +110,11 @@ const QuestionForm = () => {
     const problemDetailBlocks = await problemRef.current?.save();
     const triedMethodsBlocks = await triedRef.current?.save();
     const title = data.title;
-    const tags = data.tags;
+    const tagString = tags.join(",");
 
     const payload: PostCreationRequest = {
       title: title,
-      tags: tags,
+      tags: tagString,
       triedMethods: triedMethodsBlocks,
       problemDetail: problemDetailBlocks,
     };
@@ -124,7 +126,14 @@ const QuestionForm = () => {
     if (e.key === "Enter") {
       e.preventDefault();
       if (e.target?.value === "") return;
+      if (tags.length >= 5)
+        return toast({
+          title: "Error",
+          description: "You can only add up to 5 tags",
+          variant: "destructive",
+        });
       setTags([...tags, e.target?.value]);
+      e.target.value = "";
     }
   };
   const { ref: titleRef, ...rest } = register("title");
@@ -194,15 +203,25 @@ const QuestionForm = () => {
           <span className="text-xs">
             Add up to 5 tags to describe what your question is about.
           </span>
-          <div className="md:w-[811px] mt-3 flex md:flex-row flex-col">
-            <div className="border-2 overflow-hidden my-6 flex">
+          <div className="md:w-[811px] mt-3 ">
+            <div className="border-2 overflow-hidden my-6  grid grid-cols-3 gap-1">
               {tags.map((tag, index) => (
-                <span
-                  className="bg-blue-100 text-blue-600 px-2 py-1 rounded-md mr-2"
+                <Badge
+                  variant="default"
+                  className="w-fit flex gap-2 px-2"
                   key={index}
                 >
                   {tag}
-                </span>
+                  <X
+                    aria-label="close modal"
+                    className="h-3 w-3 right "
+                    id={index.toString()}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setTags(tags.filter((tag, i) => i !== index));
+                    }}
+                  />
+                </Badge>
               ))}
             </div>
             <Input

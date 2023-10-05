@@ -44,7 +44,6 @@ export default async function Page({ params }: { params: { slug: string } }) {
   return (
     <Suspense fallback={<Loading />}>
       <div className="flex flex-row">
-        <SideMenu />
         <div className="md:container">
           <div className="w-full">
             <div className="flex flex-col">
@@ -71,7 +70,7 @@ export default async function Page({ params }: { params: { slug: string } }) {
             </div>
             <hr />
             <div className="my-3 flex">
-              <div className="w-fit">
+              <div className="w-fit h-full">
                 <div>
                   <PostVote
                     postId={data?.id || ""}
@@ -83,19 +82,21 @@ export default async function Page({ params }: { params: { slug: string } }) {
               </div>
               <div className="md:w-full w-[300px]">
                 <EditorOutput content={data?.problemDetail} />
+                <EditorOutput content={data?.triedMethods} />
+                <div className="flex my-6 gap-2">
+                  {data?.tags.split(",").map((tag) => (
+                    <Badge
+                      key={tag}
+                      variant="outline"
+                      className="bg-blue-100 w-fit text-xs px-2 py-0 font-normal text-blue-800"
+                    >
+                      {tag}
+                    </Badge>
+                  ))}
+                </div>
               </div>
             </div>
-            <div className="md:w-full w-[300px]">
-              <EditorOutput content={data?.triedMethods} />
-            </div>
-            <div className="flex">
-              <Badge
-                variant="outline"
-                className="bg-blue-100 w-fit text-xs px-2 py-0 font-thin text-blue-600"
-              >
-                {data?.tags}
-              </Badge>
-            </div>
+            <div className="md:w-full w-[300px]"></div>
             <div className="rounded-md bg-blue-100 w-fit float-right pr-5 pl-1">
               <span className="text-zinc-400 text-xs py-1">
                 {" "}

@@ -7,13 +7,17 @@ import { UserAvatar } from "./useravatar";
 import { formatTimeToNow } from "@/lib/utils";
 import Loading from "@/app/loading";
 import Comment from "./comment";
+import CheckAnswer from "./checkanswer";
+import { db } from "@/lib/db";
+import { getAuthSession } from "@/lib/auth";
 
 interface AnswerProps {
   data: AnswerDetail[];
   userId: string;
 }
 
-const Answer: FC<AnswerProps> = ({ data, userId }: AnswerProps) => {
+const Answer: FC<AnswerProps> = async ({ data, userId }: AnswerProps) => {
+  const session = await getAuthSession();
   return (
     <Suspense fallback={<Loading />}>
       {data?.map((answer) => (
@@ -26,7 +30,7 @@ const Answer: FC<AnswerProps> = ({ data, userId }: AnswerProps) => {
             </div>
           </div>
           <div className="flex">
-            <div className="w-fit">
+            <div className="w-fit mb-5">
               <PostVote
                 postId={answer.id}
                 postedContent="answer"
@@ -39,6 +43,9 @@ const Answer: FC<AnswerProps> = ({ data, userId }: AnswerProps) => {
                   answer.votes.find((vote) => vote.userId === userId)?.type
                 }
               />
+              {session?.user.id === answer.user.id ? (
+                <CheckAnswer checked={answer.isAnswer} answerId={answer.id} />
+              ) : null}
             </div>
             <div className="md:w-full w-[300px]">
               <EditorOutput content={answer.content} />

@@ -5,6 +5,7 @@ import { Inter } from "next/font/google";
 import Providers from "@/components/providers";
 import { Toaster } from "@/components/ui/toaster";
 import { Icons } from "@/components/icons";
+import SideMenu from "@/components/sidemenu";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -28,8 +29,12 @@ export default function RootLayout({
         <Providers>
           <div className="md:container px-2">
             <NavBar />
-
-            {children}
+            <div className="flex">
+              <div>
+                <SideMenu />
+              </div>
+              <div>{children}</div>
+            </div>
           </div>
         </Providers>
         {authModal}

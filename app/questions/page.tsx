@@ -8,9 +8,8 @@ import AddQuestion from "@/components/addquestion";
 
 const page: FC = () => {
   return (
-    <div className="flex flex-row">
-      <SideMenu />
-      <div className="md:container">
+    <div className="w-full">
+      <div className="">
         <div className="flex flex-row justify-between py-5">
           <h1 className="text-2xl md:text-4xl">Top Questions</h1>
           <AddQuestion />
