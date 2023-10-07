@@ -15,7 +15,6 @@ const page = async () => {
   });
   return (
     <div className="flex gap-5">
-      <SideMenu />
       <div>
         <div className="my-10">
           <h2 className="text-2xl font-semibold">Users</h2>

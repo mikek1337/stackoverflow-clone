@@ -9,6 +9,9 @@ import axios from "axios";
 import { UserAvatar } from "./useravatar";
 import Loading from "@/app/loading";
 import type { PostedQuestion, QuestionDetail } from "@/types/db";
+import { Skeleton } from "./ui/skeleton";
+import ProgressBar from "./progress";
+
 interface questionsProps {
   questionType: string;
 }
@@ -21,17 +24,18 @@ const Questions: FC<questionsProps> = ({ questionType, ...props }) => {
       return data as QuestionDetail[];
     },
   });
+
   if (data?.length == 0)
     return (
       <div className="w-full">
         <p className="text-zinc-300 text-center text-xl">No Questions</p>
       </div>
     );
-  if (isLoading) return <Loading />;
+  if (isLoading) return <ProgressBar />;
   return (
     <div className="md:container">
       {data?.map((value) => (
-        <Suspense fallback={<Loading />} key={value.id}>
+        <>
           <hr className="my-10" />
           <div className="flex md:flex-row flex-col justify-center md:items-center md:pr-10 gap-3">
             <div className="flex md:flex-col flex-row text-zinc-300 md:w-24 w-fit  md:text-sm text-xs gap-3 px-2">
@@ -52,7 +56,7 @@ const Questions: FC<questionsProps> = ({ questionType, ...props }) => {
                 >
                   {value.title}
                 </Link>
-                <div className="ml-5 md:w-[600px] w-[300px] line-clamp-2">
+                <div className="ml-5 md:w-[700px] w-[300px] line-clamp-2">
                   <p className="md:text-sm text-xs">
                     {
                       value.problemDetail.blocks.find(
@@ -64,12 +68,14 @@ const Questions: FC<questionsProps> = ({ questionType, ...props }) => {
               </div>
               <div className="flex justify-between  px-5 w-full mt-5">
                 <div className="w-fit">
-                  <Badge
-                    variant="outline"
-                    className="bg-blue-100 w-fit text-xs px-2 py-0 font-thin text-blue-600"
-                  >
-                    {value.tags}
-                  </Badge>
+                  {value.tags.split(",").map((tag) => (
+                    <Badge
+                      variant="outline"
+                      className="bg-blue-100 w-fit text-xs px-2 py-0 font-thin text-blue-600"
+                    >
+                      {tag}
+                    </Badge>
+                  ))}
                 </div>
               </div>
               <div className="w-fit self-end">
@@ -90,7 +96,7 @@ const Questions: FC<questionsProps> = ({ questionType, ...props }) => {
               </div>
             </div>
           </div>
-        </Suspense>
+        </>
       ))}
     </div>
   );

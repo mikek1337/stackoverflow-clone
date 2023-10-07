@@ -76,3 +76,15 @@
     @apply bg-background text-foreground;
   }
 }
+
+.hljs-string,
+.hljs-section,
+.hljs-selector-class,
+.hljs-template-variable,
+.hljs-deletion {
+  color: #800;
+}
+.hljs,
+.hljs-subst {
+  color: black;
+}

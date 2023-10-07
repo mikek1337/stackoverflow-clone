@@ -41,7 +41,7 @@ const SettingMenu: FC = () => {
         </h6>
         <ul>
           <li className="p-2">
-            <Link href="/setting" className="active:bg-orange-400 active">
+            <Link href="/setting/edit" className="active:bg-orange-400 active">
               Edit Profile
             </Link>
           </li>

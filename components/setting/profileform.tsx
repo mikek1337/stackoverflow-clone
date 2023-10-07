@@ -220,7 +220,7 @@ const ProfileForm: FC<ProfileFormProps> = ({ data }: ProfileFormProps) => {
             />
           </div>
         </form>
-        <Button form="submit-profile" type="submit" className="my-5 pb-5 w-fit">
+        <Button form="submit-profile" type="submit" className="my-5 w-fit">
           Update
         </Button>
       </div>

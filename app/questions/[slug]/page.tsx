@@ -13,6 +13,9 @@ import { getAuthSession } from "@/lib/auth";
 import Comment from "@/components/comment";
 import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Progress } from "@/components/ui/progress";
+import ProgressBar from "@/components/progress";
 
 export default async function Page({ params }: { params: { slug: string } }) {
   const session = await getAuthSession();
@@ -42,7 +45,7 @@ export default async function Page({ params }: { params: { slug: string } }) {
       return acc;
     }, 0) || 0;
   return (
-    <Suspense fallback={<Loading />}>
+    <Suspense fallback={<ProgressBar>Please wait!</ProgressBar>}>
       <div className="flex flex-row">
         <div className="md:container">
           <div className="w-full">

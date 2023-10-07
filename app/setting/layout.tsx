@@ -20,7 +20,6 @@ const Layout = async ({ children }: { children: React.ReactNode }) => {
   return (
     <div>
       <div className="flex w-full">
-        <SideMenu />
         <div>
           <ProfileHeader user={user} />
           <div className="flex gap-10  flex-row ">

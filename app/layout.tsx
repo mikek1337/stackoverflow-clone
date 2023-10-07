@@ -29,8 +29,8 @@ export default function RootLayout({
         <Providers>
           <div className="md:container px-2">
             <NavBar />
-            <div className="flex">
-              <div>
+            <div className="flex gap-5">
+              <div className="w-fit">
                 <SideMenu />
               </div>
               <div>{children}</div>

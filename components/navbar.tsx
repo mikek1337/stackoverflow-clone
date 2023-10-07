@@ -61,8 +61,8 @@ const NavBar = async () => {
         <li className=" md:w-full w-20 md:block hidden">
           <SearchBar />
         </li>
-        <li className="md:hidden block w-fit">
-          <Icons.search className="text-zinc-700 w-auto" />
+        <li className="md:hidden block w-fit ">
+          <Icons.search className="text-zinc-700 w-auto focus:hidden" />
         </li>
         {!data && (
           <li className="flex gap-1 justify-end w-fit ">

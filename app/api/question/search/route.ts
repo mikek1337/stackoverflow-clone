@@ -10,13 +10,14 @@ export async function GET(req: Request) {
             OR: [
                 {
                     title: {
-                        startsWith: searchParam,
+                        contains: searchParam,
                         mode: 'insensitive'
                     }
                 },
                 {
                     tags: {
-                        startsWith: searchParam
+                        contains: searchParam,
+                        mode: 'insensitive'
                     }
                 }
             ]
