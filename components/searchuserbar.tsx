@@ -2,7 +2,7 @@
 import { Prisma, Question, User } from "@prisma/client";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import {
   Command,
@@ -12,9 +12,11 @@ import {
 } from "@/components/ui/command";
 import { CommandList } from "cmdk";
 import Image from "next/image";
+import { useOnClickOutside } from "@/hooks/use-on-click-outside";
 
 const SearchBar = () => {
   const [input, setInput] = useState<string>("");
+  const pathname = usePathname();
   const router = useRouter();
   const {
     isFetched,

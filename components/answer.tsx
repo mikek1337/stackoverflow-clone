@@ -10,13 +10,19 @@ import Comment from "./comment";
 import CheckAnswer from "./checkanswer";
 import { db } from "@/lib/db";
 import { getAuthSession } from "@/lib/auth";
+import { Icons } from "./icons";
 
 interface AnswerProps {
   data: AnswerDetail[];
   userId: string;
+  questionOwner: boolean;
 }
 
-const Answer: FC<AnswerProps> = async ({ data, userId }: AnswerProps) => {
+const Answer: FC<AnswerProps> = async ({
+  data,
+  userId,
+  questionOwner,
+}: AnswerProps) => {
   const session = await getAuthSession();
   return (
     <Suspense fallback={<Loading />}>
@@ -43,9 +49,17 @@ const Answer: FC<AnswerProps> = async ({ data, userId }: AnswerProps) => {
                   answer.votes.find((vote) => vote.userId === userId)?.type
                 }
               />
-              {session?.user.id === answer.user.id ? (
+              {questionOwner ? (
                 <CheckAnswer checked={answer.isAnswer} answerId={answer.id} />
-              ) : null}
+              ) : (
+                answer.isAnswer && (
+                  <Icons.check
+                    className="items-center text-left text-green-600"
+                    height="30"
+                    width="30"
+                  />
+                )
+              )}
             </div>
             <div className="md:w-full w-[300px]">
               <EditorOutput content={answer.content} />

@@ -12,16 +12,22 @@ import { buttonVariants } from "./ui/button";
 interface PostAnswerProps {
   questionId: string;
   answerData: AnswerDetail[];
+  isOwner: boolean;
 }
 
 const PostAnswer: FC<PostAnswerProps> = async ({
   questionId,
   answerData,
+  isOwner,
 }: PostAnswerProps) => {
   const session = await getAuthSession();
   return (
     <Suspense fallback={<Loading />}>
-      <Answer data={answerData || []} userId={session?.user.id || ""} />
+      <Answer
+        questionOwner={isOwner}
+        data={answerData || []}
+        userId={session?.user.id || ""}
+      />
       {session?.user && <AnswerForm questionId={questionId} />}
       {!session?.user && (
         <Link

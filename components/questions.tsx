@@ -20,9 +20,19 @@ const Questions: FC<questionsProps> = ({ questionType, ...props }) => {
   const { data, isLoading } = useQuery({
     queryKey: ["questions"],
     queryFn: async () => {
-      const { data } = await axios.get("/api/question");
-      return data as QuestionDetail[];
+      let data: QuestionDetail[] = [];
+      if (questionType == "all") {
+        data = (await axios.get("/api/question")).data;
+      } else if (questionType == "new") {
+        data = (await axios.get("/api/question?q=new")).data;
+      } else if (questionType == "week") {
+        data = (await axios.get("/api/question?q=week")).data;
+      } else {
+        data = (await axios.get("/api/question?q=month")).data;
+      }
+      return data;
     },
+    staleTime: 1000 * 60 * 5,
   });
 
   if (data?.length == 0)
@@ -31,9 +41,10 @@ const Questions: FC<questionsProps> = ({ questionType, ...props }) => {
         <p className="text-zinc-300 text-center text-xl">No Questions</p>
       </div>
     );
-  if (isLoading) return <ProgressBar />;
+
   return (
     <div className="md:container">
+      {isLoading && <Loading />}
       {data?.map((value) => (
         <>
           <hr className="my-10" />
@@ -70,6 +81,7 @@ const Questions: FC<questionsProps> = ({ questionType, ...props }) => {
                 <div className="w-fit">
                   {value.tags.split(",").map((tag) => (
                     <Badge
+                      key={tag}
                       variant="outline"
                       className="bg-blue-100 w-fit text-xs px-2 py-0 font-thin text-blue-600"
                     >

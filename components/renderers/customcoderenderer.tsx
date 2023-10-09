@@ -6,7 +6,7 @@ function CustomCodeRenderer({ data }: any) {
 
   return (
     <pre className="rounded-md p-4 whitespace-pre  overflow-auto max-h-[400px]">
-      <Highlight className="text-sm w-[600px] h-[100px]">{data.code}</Highlight>
+      <Highlight className="text-sm w-[600px]">{data.code}</Highlight>
     </pre>
   );
 }

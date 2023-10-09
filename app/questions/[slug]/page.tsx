@@ -129,6 +129,7 @@ export default async function Page({ params }: { params: { slug: string } }) {
               <PostAnswer
                 questionId={params.slug}
                 answerData={data?.answers || []}
+                isOwner={data?.user.id === session?.user.id}
               />
             </div>
           </div>

@@ -1,19 +1,36 @@
 "use client";
-import { FC, useEffect, useState } from "react";
+import { FC, useCallback, useEffect, useRef, useState } from "react";
 import { Command, CommandInput, CommandList } from "./ui/command";
 import { CommandEmpty, CommandGroup, CommandItem } from "cmdk";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import debounce from "lodash.debounce";
 
 import { Question, Prisma } from "@prisma/client";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { Badge } from "./ui/badge";
-
+import { useOnClickOutside } from "@/hooks/use-on-click-outside";
 interface searchbarProps {}
 
 const SearchBar: FC<searchbarProps> = ({}) => {
   const [input, setInput] = useState<string>("");
+  const pathname = usePathname();
+  const commandRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
+
+  useOnClickOutside(commandRef, () => {
+    setInput("");
+  });
+
+  const request = debounce(async () => {
+    refetch();
+  }, 300);
+
+  const debounceRequest = useCallback(() => {
+    request();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const {
     isFetched,
     data: queryResults,
@@ -31,12 +48,9 @@ const SearchBar: FC<searchbarProps> = ({}) => {
     enabled: false,
   });
   useEffect(() => {
-    const timeout = setTimeout(() => {
-      refetch();
-    }, 2000);
-    return () => clearTimeout(timeout);
+    setInput("");
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [input]);
+  }, [pathname]);
   return (
     <div>
       <Command className="relative rounded-lg border  z-50 overflow-visible">
@@ -45,6 +59,7 @@ const SearchBar: FC<searchbarProps> = ({}) => {
           className="outline-none boarder-none focus:border-none focus:outline-none ring-0 "
           onValueChange={(text) => {
             setInput(text);
+            debounceRequest();
           }}
           value={input}
         />
@@ -56,7 +71,7 @@ const SearchBar: FC<searchbarProps> = ({}) => {
                 {queryResults?.map((question) => (
                   <CommandItem
                     onSelect={(e) => {
-                      router.push(`/question/${question.id}`);
+                      router.push(`/questions/${question.id}`);
                       router.refresh();
                     }}
                     value={question.title}

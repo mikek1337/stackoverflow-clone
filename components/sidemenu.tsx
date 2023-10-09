@@ -31,14 +31,14 @@ const SideMenu: FC = () => {
           >
             Questions
           </Link>
-          <Link
+          {/*     <Link
             href="/tags"
             className={cn("active:bg-zinc-200", {
               "text-zinc-900 font-semibold": pathName.search("tags") > 0,
             })}
           >
             Tags
-          </Link>
+          </Link> */}
           <Link
             href="/users"
             className={cn("active:bg-zinc-200", {
