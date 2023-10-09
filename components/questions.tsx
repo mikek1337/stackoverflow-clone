@@ -24,15 +24,15 @@ const Questions: FC<questionsProps> = ({ questionType, ...props }) => {
       if (questionType == "all") {
         data = (await axios.get("/api/question")).data;
       } else if (questionType == "new") {
-        data = (await axios.get("/api/question?q=new")).data;
+        data = (await axios.get("/api/question/get?q=new")).data;
       } else if (questionType == "week") {
-        data = (await axios.get("/api/question?q=week")).data;
+        data = (await axios.get("/api/question/get?q=week")).data;
       } else {
-        data = (await axios.get("/api/question?q=month")).data;
+        data = (await axios.get("/api/question/get?q=month")).data;
       }
+      console.log(data);
       return data;
     },
-    staleTime: 1000 * 60 * 5,
   });
 
   if (data?.length == 0)
@@ -41,14 +41,16 @@ const Questions: FC<questionsProps> = ({ questionType, ...props }) => {
         <p className="text-zinc-300 text-center text-xl">No Questions</p>
       </div>
     );
-
+  if (isLoading) return <Loading />;
   return (
     <div className="md:container">
-      {isLoading && <Loading />}
       {data?.map((value) => (
         <>
           <hr className="my-10" />
-          <div className="flex md:flex-row flex-col justify-center md:items-center md:pr-10 gap-3">
+          <div
+            key={value.id}
+            className="flex md:flex-row flex-col justify-center md:items-center md:pr-10 gap-3"
+          >
             <div className="flex md:flex-col flex-row text-zinc-300 md:w-24 w-fit  md:text-sm text-xs gap-3 px-2">
               <span className="text-zinc-800">
                 {value.votes.length}&nbsp;votes

@@ -13,6 +13,15 @@ const QuestionTabs = () => {
       <TabsContent value="all">
         <Questions questionType="all" />
       </TabsContent>
+      <TabsContent value="new">
+        <Questions questionType="new" />
+      </TabsContent>
+      <TabsContent value="week">
+        <Questions questionType="week" />
+      </TabsContent>
+      <TabsContent value="month">
+        <Questions questionType="month" />
+      </TabsContent>
     </Tabs>
   );
 };
