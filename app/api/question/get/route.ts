@@ -1,5 +1,6 @@
 import { db } from "@/lib/db";
 import { Question } from "@prisma/client";
+import { setDate } from "date-fns";
 
 export async function GET(req: Request) {
     const url = new URL(req.url);
@@ -9,21 +10,18 @@ export async function GET(req: Request) {
     let data: Question[] = [];
     if (q === "new") {
         const date = new Date();
-        const yesterday = new Date(date.getDate() - 1)
+        console.log()
         data = await db.question.findMany({
+            include: {
+                user: true,
+                votes: true,
+                answers: true
+            },
             where: {
-                AND: [
-                    {
-                        postedDate: {
-                            lte: date,
-                        }
-                    },
-                    {
-                        postedDate: {
-                            gt: yesterday
-                        }
-                    }
-                ]
+                postedDate: {
+                    gt: new Date(date.setDate(date.getDate() - 1)),
+                }
+
             }
         });
     }
@@ -32,21 +30,17 @@ export async function GET(req: Request) {
         const weekDate = new Date(date.setDate(date.getDate() - 7));
         console.log(weekDate);
         data = await db.question.findMany({
+            include: {
+                user: true,
+                votes: true,
+                answers: true
+            },
             where: {
-                AND: [
-                    {
-                        postedDate: {
-                            lte: date,
-                        }
-                    },
-                    {
-                        postedDate: {
-                            gt: weekDate,
-                        }
-                    }
 
-                ]
-
+                postedDate: {
+                    gt: new Date(date.setDate(date.getDate() - 6)),
+                    lt: weekDate,
+                }
             }
         })
     }
@@ -54,6 +48,11 @@ export async function GET(req: Request) {
         const date = new Date();
         const monthDate = new Date(date.setMonth(date.getMonth() - 1));
         data = await db.question.findMany({
+            include: {
+                user: true,
+                votes: true,
+                answers: true
+            },
             where: {
                 AND: [
                     {

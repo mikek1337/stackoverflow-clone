@@ -11,6 +11,7 @@ import Loading from "@/app/loading";
 import type { PostedQuestion, QuestionDetail } from "@/types/db";
 import { Skeleton } from "./ui/skeleton";
 import ProgressBar from "./progress";
+import { Question } from "@prisma/client";
 
 interface questionsProps {
   questionType: string;
@@ -35,20 +36,19 @@ const Questions: FC<questionsProps> = ({ questionType, ...props }) => {
     },
   });
 
-  if (data?.length == 0)
-    return (
-      <div className="w-full">
-        <p className="text-zinc-300 text-center md:text-xl text-sm ">
-          No Questions
-        </p>
-      </div>
-    );
   if (isLoading) return <Loading />;
   return (
     <div className="md:container">
+      {data?.length === 0 ? (
+        <div className="w-full container my-auto">
+          <p className="text-zinc-300 text-center md:text-xl text-sm ">
+            No Questions
+          </p>
+        </div>
+      ) : null}
       {data?.map((value) => (
         <>
-          <hr className="my-10" />
+          <hr className="my-2" />
           <div
             key={value.id}
             className="flex md:flex-row flex-col justify-center md:items-start md:pr-10 gap-3"
@@ -57,7 +57,15 @@ const Questions: FC<questionsProps> = ({ questionType, ...props }) => {
               <span className="text-zinc-800">
                 {value.votes.length}&nbsp;votes
               </span>
-              <p className="">{value.answers.length}&nbsp;answers</p>
+              <p
+                className={
+                  value.answers.find((answer) => answer.isAnswer)?.isAnswer
+                    ? "bg-green-600 text-white font-bold px-2 rounded-md"
+                    : ""
+                }
+              >
+                {value.answers.length}&nbsp;answers
+              </p>
               <span>3&nbsp;views</span>
             </div>
             <div className="flex flex-col">
@@ -82,12 +90,12 @@ const Questions: FC<questionsProps> = ({ questionType, ...props }) => {
                 </div>
               </div>
               <div className="flex justify-between  px-5 w-full mt-5">
-                <div className="w-fit">
+                <div className="w-fit flex gap-1">
                   {value.tags.split(",").map((tag) => (
                     <Badge
                       key={tag}
                       variant="outline"
-                      className="bg-blue-100 w-fit text-xs px-2 py-0 font-thin text-blue-600"
+                      className="bg-blue-100 w-fit text-xs px-5 py-0 font-thin text-blue-600"
                     >
                       {tag}
                     </Badge>
