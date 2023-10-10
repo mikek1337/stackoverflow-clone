@@ -38,7 +38,9 @@ const Questions: FC<questionsProps> = ({ questionType, ...props }) => {
   if (data?.length == 0)
     return (
       <div className="w-full">
-        <p className="text-zinc-300 text-center text-xl">No Questions</p>
+        <p className="text-zinc-300 text-center md:text-xl text-sm ">
+          No Questions
+        </p>
       </div>
     );
   if (isLoading) return <Loading />;
@@ -49,9 +51,9 @@ const Questions: FC<questionsProps> = ({ questionType, ...props }) => {
           <hr className="my-10" />
           <div
             key={value.id}
-            className="flex md:flex-row flex-col justify-center md:items-center md:pr-10 gap-3"
+            className="flex md:flex-row flex-col justify-center md:items-start md:pr-10 gap-3"
           >
-            <div className="flex md:flex-col flex-row text-zinc-300 md:w-24 w-fit  md:text-sm text-xs gap-3 px-2">
+            <div className="flex md:flex-col flex-row text-zinc-300 md:w-24 w-fit  md:text-sm text-xs gap-1 items-center px-2">
               <span className="text-zinc-800">
                 {value.votes.length}&nbsp;votes
               </span>
@@ -59,7 +61,7 @@ const Questions: FC<questionsProps> = ({ questionType, ...props }) => {
               <span>3&nbsp;views</span>
             </div>
             <div className="flex flex-col">
-              <div className="flex gap-3 flex-col ">
+              <div className="flex  flex-col ">
                 <Link
                   href={`questions/${value.id}`}
                   className={cn(
