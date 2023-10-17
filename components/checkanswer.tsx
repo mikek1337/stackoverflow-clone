@@ -4,6 +4,8 @@ import { Checkbox } from "./ui/checkbox";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { toast } from "@/hooks/use-toast";
+import { set } from "lodash";
+import { CheckedState } from "@radix-ui/react-checkbox";
 interface CheckAnswerProps {
   answerId: string;
   checked: boolean;
@@ -30,7 +32,8 @@ const CheckAnswer: FC<CheckAnswerProps> = ({
       });
     },
   });
-  const onChecked = () => {
+  const onChecked = (check: CheckedState) => {
+    if (typeof check === "boolean") checked = check;
     updateAnswer();
   };
   return (

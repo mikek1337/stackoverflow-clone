@@ -1,4 +1,4 @@
-import type { Question, User, Vote, Answer, AnswerVote } from "@prisma/client";
+import type { Question, User, Vote, Answer, AnswerVote, AnswerComment } from "@prisma/client";
 
 export type PostedQuestion = Question & {
     user: User
@@ -24,6 +24,7 @@ export type QuestionDetail = Question & {
 
 export type AnswerDetail = Answer & {
     user: User,
-    votes: AnswerVote[]
+    votes: AnswerVote[],
+    AnswerComment: AnswerComment[]
 }
 

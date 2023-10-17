@@ -6,7 +6,7 @@ import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { CommentPostValidator } from "@/lib/validators/post";
 import { toast } from "@/hooks/use-toast";
-import { redirect } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 interface AddCommentProps {
   questionId: string;
   userId: string | "";
@@ -15,6 +15,7 @@ interface AddCommentProps {
 const AddComment: FC<AddCommentProps> = ({ questionId, userId }) => {
   const [hide, setHide] = useState<boolean>(true);
   const [comment, setComment] = useState<string>("");
+  const router = useRouter();
   const { mutate: postComment } = useMutation({
     mutationFn: async ({ comment, questionId }: CommentPostValidator) => {
       const payload: CommentPostValidator = { comment, questionId, userId };
@@ -30,6 +31,7 @@ const AddComment: FC<AddCommentProps> = ({ questionId, userId }) => {
     },
     onSuccess: () => {
       setComment("");
+      router.refresh();
       setHide(true);
       return toast({
         description: "Comment posted",

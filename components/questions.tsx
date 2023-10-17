@@ -31,7 +31,7 @@ const Questions: FC<questionsProps> = ({ questionType, ...props }) => {
       } else {
         data = (await axios.get("/api/question/get?q=month")).data;
       }
-      console.log(data);
+
       return data;
     },
   });
@@ -48,7 +48,7 @@ const Questions: FC<questionsProps> = ({ questionType, ...props }) => {
       ) : null}
       {data?.map((value) => (
         <>
-          <hr className="my-2" />
+          <hr className="my-1" />
           <div
             key={value.id}
             className="flex md:flex-row flex-col justify-center md:items-start md:pr-10 gap-3"
@@ -74,7 +74,7 @@ const Questions: FC<questionsProps> = ({ questionType, ...props }) => {
                   href={`questions/${value.id}`}
                   className={cn(
                     buttonVariants({ variant: "link" }),
-                    "w-fit text-blue-500 md:text-lg text-xs"
+                    "w-fit text-blue-500 md:text-lg text-xs line-clamp-2"
                   )}
                 >
                   {value.title}

@@ -26,10 +26,26 @@ export default async function Page({ params }: { params: { slug: string } }) {
     include: {
       votes: true,
       user: true,
+      QuestionComment: {
+        include: {
+          user: true,
+        },
+        orderBy: {
+          postedDate: "asc",
+        },
+      },
       answers: {
         include: {
           user: true,
           votes: true,
+          AnswerComment: {
+            include: {
+              user: true,
+            },
+            orderBy: {
+              postedDate: "asc",
+            },
+          },
         },
       },
     },
@@ -116,8 +132,11 @@ export default async function Page({ params }: { params: { slug: string } }) {
             </div>
           </div>
           <div className="my-10">
-            <hr />
-            <Comment contentId={data?.id || ""} type="question" />
+            <Comment
+              contentId={data?.id || ""}
+              type="question"
+              comments={data?.QuestionComment || []}
+            />
           </div>
           <div>
             <div className="my-3 flex justify-between">

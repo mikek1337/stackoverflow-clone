@@ -7,7 +7,7 @@ import { FC } from "react";
 const SideMenu: FC = () => {
   const pathName = usePathname();
   return (
-    <div className="md:w-[158px]  md:block hidden border-r-2 text-zinc-500 h-full pr-10">
+    <aside className="md:w-[158px]  md:block hidden border-r-2 text-zinc-500 h-full min-h-screen pr-10">
       <div className="active:bg-slate-200 py-2  pt-5">
         <Link
           href="/"
@@ -49,7 +49,7 @@ const SideMenu: FC = () => {
           </Link>
         </div>
       </div>
-    </div>
+    </aside>
   );
 };
 

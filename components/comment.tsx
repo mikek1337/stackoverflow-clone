@@ -8,10 +8,16 @@ import { getAuthSession } from "@/lib/auth";
 interface CommentProps {
   contentId: string;
   type: "question" | "answer";
+  comments: any[];
 }
-const Comment: FC<CommentProps> = async ({ contentId, type }: CommentProps) => {
-  let comments: any[] = [];
+const Comment: FC<CommentProps> = async ({
+  contentId,
+  type,
+  comments,
+}: CommentProps) => {
+  /* let comments: any[] = []; */
   const session = await getAuthSession();
+  /* const session = await getAuthSession();
   if (type === "question") {
     comments = await db.questionComment.findMany({
       where: {
@@ -35,8 +41,8 @@ const Comment: FC<CommentProps> = async ({ contentId, type }: CommentProps) => {
       orderBy: {
         postedDate: "asc",
       },
-    });
-  }
+    }); */
+
   return (
     <Suspense fallback={<Loading />}>
       {comments.map((comment) => (

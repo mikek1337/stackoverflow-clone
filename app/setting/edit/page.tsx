@@ -1,3 +1,10 @@
+/**
+ * This component is responsible for rendering the edit profile page.
+ * It allows the user to edit their profile information, including their display name, location, private information, social media links, and bio.
+ * The component uses TanStack's react-query library to fetch the user's data from the server and update it when the user submits the form.
+ * It also uses UploadThing's generateComponents function to create an image uploader component that allows the user to upload a new profile picture.
+ * @returns A React component that renders the edit profile page.
+ */
 "use client";
 import ProfileForm from "@/components/setting/profileform";
 import { Button, buttonVariants } from "@/components/ui/button";
@@ -13,7 +20,7 @@ import axios from "axios";
 import { generateComponents } from "@uploadthing/react";
 import { UploadFileResponse } from "uploadthing/client";
 import { OurFileRouter } from "@/app/api/uploadthing/core";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -22,34 +29,42 @@ import TextareaAutoSize from "react-textarea-autosize";
 import Image from "next/image";
 
 type FormData = z.infer<typeof UserPostValidator>;
-const Page = async () => {
+const Page = () => {
   const { UploadButton, UploadDropzone, Uploader } =
     generateComponents<OurFileRouter>();
-  const { data } = useQuery({
+  const [filePath, setFilePath] = useState<string>("");
+  const [userData, setUserData] = useState<FormData>({} as FormData);
+  const { data, isLoading } = useQuery({
     queryFn: async () => {
       const { data } = await axios.get("/api/user");
       return data as User;
     },
+    queryKey: ["user"],
   });
-  const [result, setResult] = useState<User | undefined>(data);
-  const [filePath, setFilePath] = useState<string>(result?.image || "");
+
   const router = useRouter();
-  const { register, handleSubmit } = useForm<FormData>({
+  const { register, handleSubmit, setValue } = useForm<FormData>({
     resolver: zodResolver(UserPostValidator),
     defaultValues: {
-      username: result?.username || "",
-      name: result?.name || "",
+      username: "",
+      name: "",
       imagePath: filePath,
-      github: result?.github || "",
-      linkden: result?.linkden || "",
-      twitter: result?.twitter || "",
-      location: result?.location || "",
-      about: result?.about || "",
+      github: "",
+      linkden: "",
+      twitter: "",
+      location: "",
+      about: "",
     },
   });
   const changeImage = (res: UploadFileResponse[] | undefined) => {
     if (res instanceof Array) {
       setFilePath(res[0].url);
+    } else {
+      toast({
+        title: "Something went wrong",
+        description: "Image was not uploaded. Please try again later.",
+        variant: "destructive",
+      });
     }
   };
 
@@ -92,12 +107,6 @@ const Page = async () => {
     },
   });
 
-  /*   const session = await getAuthSession();
-const user = await db.user.findUnique({
-  where: {
-    id: session?.user?.id,
-  },
-}); */
   let submit = async (data: FormData) => {
     const username = data.username;
     const name = data.name;
@@ -119,10 +128,30 @@ const user = await db.user.findUnique({
     };
     updateUser(payload);
   };
+  useEffect(() => {
+    setValue("username", data?.username);
+    setValue("name", data?.name);
+    setValue("imagePath", data?.image);
+    setValue("location", data?.location);
+    setValue("github", data?.github);
+    setValue("linkden", data?.linkden);
+    setValue("twitter", data?.twitter);
+    setValue("about", data?.about);
+    setFilePath(data?.image);
+  }, [data, register]);
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
   return (
     <div className="w-fit">
-      <div className="relative w-32 h-fit object-contain flex flex-col">
-        <Image src={filePath || ""} width="70" height="70" alt="" />
+      <div className="relative w-32 h-fit object-cover aspect-square flex flex-col">
+        <Image
+          src={filePath || ""}
+          width="70"
+          height="70"
+          alt="error loading image"
+        />
         <div className="absolute inset-y-24 w-full h-fit">
           <UploadButton
             className={cn(
@@ -220,7 +249,7 @@ const user = await db.user.findUnique({
             <label>About</label>
             <TextareaAutoSize
               placeholder="Bio..."
-              className="border-b-2  text-2xl focus:outline-none p-4"
+              className="border-b-2  text-xl focus:outline-none p-4"
               rows={100}
               {...register("about")}
             />

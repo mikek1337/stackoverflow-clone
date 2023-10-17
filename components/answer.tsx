@@ -23,7 +23,6 @@ const Answer: FC<AnswerProps> = async ({
   userId,
   questionOwner,
 }: AnswerProps) => {
-  const session = await getAuthSession();
   return (
     <Suspense fallback={<Loading />}>
       {data?.map((answer) => (
@@ -81,7 +80,11 @@ const Answer: FC<AnswerProps> = async ({
             </div>
           </div>
           <hr />
-          <Comment contentId={answer.id} type="answer" />
+          <Comment
+            contentId={answer.id}
+            type="answer"
+            comments={answer.AnswerComment}
+          />
         </div>
       ))}
     </Suspense>

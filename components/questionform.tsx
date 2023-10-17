@@ -118,7 +118,7 @@ const QuestionForm = () => {
       triedMethods: triedMethodsBlocks,
       problemDetail: problemDetailBlocks,
     };
-    console.log(payload, "here");
+
     postQuestion(payload);
   }
 

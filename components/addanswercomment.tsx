@@ -17,8 +17,10 @@ const AddAnswerComment: FC<AddAnswerCommentProps> = ({
 }: AddAnswerCommentProps) => {
   const [hide, setHide] = useState<boolean>(true);
   const [comment, setComment] = useState<string>("");
+  const [disabled, setDisabled] = useState<boolean>(false);
   const { mutate: postComment } = useMutation({
     mutationFn: async ({ comment, questionId }: CommentPostValidator) => {
+      setDisabled(true);
       const payload: CommentPostValidator = { comment, questionId, userId };
       const { data } = await axios.post("/api/comment/answer/post", payload);
       return data;
@@ -36,6 +38,9 @@ const AddAnswerComment: FC<AddAnswerCommentProps> = ({
       return toast({
         description: "Comment posted",
       });
+    },
+    onSettled: () => {
+      setDisabled(false);
     },
   });
 
@@ -73,9 +78,10 @@ const AddAnswerComment: FC<AddAnswerCommentProps> = ({
           placeholder="add comment"
           className="text-lg px-2 h-20 border-b-2 focus:outline-none"
           onChange={(e) => setComment(e.target.value)}
+          value={comment}
         />
         <div className="flex flex-row gap-2 justify-end">
-          <Button className="w-fit" onClick={onPost}>
+          <Button className="w-fit" onClick={onPost} disabled={disabled}>
             Post
           </Button>
           <Button
