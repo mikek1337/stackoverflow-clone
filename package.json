@@ -67,6 +67,7 @@
   },
   "devDependencies": {
     "@editorjs/inline-code": "^1.4.0",
+    "@netlify/plugin-nextjs": "^4.37.4",
     "@types/editorjs__header": "^2.6.0",
     "@types/lodash.debounce": "^4.0.7",
     "@types/react-highlight": "^0.12.6",
