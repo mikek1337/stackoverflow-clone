@@ -129,15 +129,16 @@ const Page = () => {
     updateUser(payload);
   };
   useEffect(() => {
-    setValue("username", data?.username);
-    setValue("name", data?.name);
-    setValue("imagePath", data?.image);
-    setValue("location", data?.location);
-    setValue("github", data?.github);
-    setValue("linkden", data?.linkden);
-    setValue("twitter", data?.twitter);
-    setValue("about", data?.about);
-    setFilePath(data?.image);
+    setValue("username", data?.username || "");
+    setValue("name", data?.name || "");
+    setValue("imagePath", data?.image || "");
+    setValue("location", data?.location || "");
+    setValue("github", data?.github || "");
+    setValue("linkden", data?.linkden || "");
+    setValue("twitter", data?.twitter || "");
+    setValue("about", data?.about || "");
+    setFilePath(data?.image || "");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data, register]);
 
   if (isLoading) {

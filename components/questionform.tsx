@@ -122,18 +122,18 @@ const QuestionForm = () => {
     postQuestion(payload);
   }
 
-  const onKeyPressed = (e: KeyboardEvent) => {
+  const onKeyPressed = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       e.preventDefault();
-      if (e.target?.value === "") return;
+      if (e.currentTarget?.value === "") return;
       if (tags.length >= 5)
         return toast({
           title: "Error",
           description: "You can only add up to 5 tags",
           variant: "destructive",
         });
-      setTags([...tags, e.target?.value]);
-      e.target.value = "";
+      setTags([...tags, e.currentTarget?.value]);
+      e.currentTarget.value = "";
     }
   };
   const { ref: titleRef, ...rest } = register("title");

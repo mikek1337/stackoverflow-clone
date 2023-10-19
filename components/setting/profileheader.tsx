@@ -11,7 +11,7 @@ const ProfileHeader: FC<ProfileHeaderProps> = async ({
     <div className="flex items-center p-10 gap-3">
       <div className=" w-[100px] h-[100px]">
         <Image
-          src={user.image}
+          src={user?.image || ""}
           alt="user image"
           className="rounded-md "
           width={100}
@@ -19,7 +19,7 @@ const ProfileHeader: FC<ProfileHeaderProps> = async ({
         />
       </div>
       <div>
-        <h1 className="font-semibold text-xl">{user.username}</h1>
+        <h1 className="font-semibold text-xl">{user?.username}</h1>
       </div>
     </div>
   );
