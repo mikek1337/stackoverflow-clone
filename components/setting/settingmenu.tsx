@@ -1,59 +1,42 @@
+"use client";
 import Link from "next/link";
-import { FC } from "react";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "../ui/dropdown-menu";
-import { Icons } from "../icons";
+import { FC, useRef } from "react";
+import { ChevronLeft } from "lucide-react";
+import { usePathname } from "next/navigation";
+import { cn } from "@/lib/utils";
 
 const SettingMenu: FC = () => {
+  const path = usePathname();
+
   return (
-    <div className="flex flex-col gap-3 max-w-max mx-10">
-      {/*       <div className=" w-full">
-        <DropdownMenu>
-          <DropdownMenuTrigger className="w-full text-center">
-            <Icons.menuIcon />
-          </DropdownMenuTrigger>
-          <DropdownMenuContent>
-            <DropdownMenuLabel>Personal information</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <Link href="/setting" className="active:bg-orange-400 active">
-                Edit Profile
-              </Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <Link href="/setting/delete">Delete Profile</Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <Link href="/setting/question">Your questions</Link>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </div> */}
+    <aside className="flex-1 flex-col gap-3 max-w-max  md:mx-10 h-full px-2">
       <div className="">
-        <h6 className="text-sm font-semibold text-zinc-800 my-3">
+        <h6 className="text-sm md:text-left text-center font-semibold text-zinc-800 my-3">
           Personal information
         </h6>
-        <ul>
-          <li className="p-2">
-            <Link href="/setting/edit" className="active:bg-orange-400 active">
+        <ul className="flex md:block text-sm w-full">
+          <li className="p-2 w-auto">
+            <Link
+              href="/setting/edit"
+              className={cn(
+                "hover:cursor-pointer hover:shadow-md rounded-md px-3",
+                {
+                  "shadow-md bg-zinc-300": path.search("edit") > 0,
+                }
+              )}
+            >
               Edit Profile
             </Link>
           </li>
-          <li className="p-2">
+          <li className="p-2 w-auto">
             <Link href="/setting/delete">Delete Profile</Link>
           </li>
-          <li className="p-2">
+          <li className="p-2 w-auto">
             <Link href="/setting/question">Your questions</Link>
           </li>
         </ul>
       </div>
-    </div>
+    </aside>
   );
 };
 

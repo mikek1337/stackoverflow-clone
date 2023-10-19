@@ -148,8 +148,8 @@ const Page = () => {
       <div className="relative w-32 h-fit object-cover aspect-square flex flex-col">
         <Image
           src={filePath || ""}
-          width="70"
-          height="70"
+          width="200"
+          height="200"
           alt="error loading image"
         />
         <div className="absolute inset-y-24 w-full h-fit">
