@@ -99,7 +99,7 @@ const SearchBar: FC<searchbarProps> = ({}) => {
                       </Link>
                       <div className="flex gap-3 flex-auto ">
                         {question.tags.split(",").map((tag) => (
-                          <Badge variant="default" className="w-fit ">
+                          <Badge variant="default" className="w-fit " key={tag}>
                             {tag}
                           </Badge>
                         ))}
