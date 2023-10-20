@@ -20,10 +20,10 @@ const page = async () => {
           <h2 className="text-2xl font-semibold">Users</h2>
         </div>
         <SearchBar />
-        <div className="grid grid-cols-4 mt-2">
+        <div className="grid md:grid-cols-4 grid-cols-2 mt-2">
           {result.map((user) => (
             <div key={user.id} className="flex gap-2">
-              <div className="w-16 h-16 object-cover ">
+              <div className="w-32 h-32 object-cover ">
                 <Image
                   src={user.image || ""}
                   alt=""

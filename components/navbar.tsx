@@ -18,7 +18,7 @@ const NavBar = async () => {
   const data = await getAuthSession();
   return (
     <div className="pt-2 border-b-2 w-full ">
-      <ul className="flex md:justify-center justify-evenly items-center gap-4 ">
+      <ul className="flex md:justify-center justify-evenly items-center gap-4 relative">
         <li className="md:hidden block w-fit">
           <DropdownMenu>
             <DropdownMenuTrigger>
@@ -87,11 +87,13 @@ const NavBar = async () => {
             </Link>
           </li>
         )}
-        {data && (
-          <div className="w-fit">
-            <UserAccountNav user={data.user} className="float-right w-fit" />
-          </div>
-        )}
+        <li className="w-fit md:block flex items-center">
+          {data && (
+            <div className="">
+              <UserAccountNav user={data.user} className="w-fit" />
+            </div>
+          )}
+        </li>
       </ul>
     </div>
   );

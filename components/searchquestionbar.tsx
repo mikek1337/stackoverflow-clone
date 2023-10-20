@@ -10,10 +10,14 @@ import { Question, Prisma } from "@prisma/client";
 import { usePathname, useRouter } from "next/navigation";
 import { Badge } from "./ui/badge";
 import { useOnClickOutside } from "@/hooks/use-on-click-outside";
+import { Icons } from "./icons";
+import { cn } from "@/lib/utils";
+import Link from "next/link";
 interface searchbarProps {}
 
 const SearchBar: FC<searchbarProps> = ({}) => {
   const [input, setInput] = useState<string>("");
+  const [isMobile, setIsMobile] = useState<boolean>(false);
   const pathname = usePathname();
   const commandRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
@@ -52,11 +56,20 @@ const SearchBar: FC<searchbarProps> = ({}) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname]);
   return (
-    <div>
-      <Command className="relative rounded-lg border  z-50 overflow-visible">
+    <div className="w-full">
+      <Command
+        className={cn(
+          "rounded-lg border overflow-visible  md:block ",
+          { "relative block z-50 ": !isMobile },
+          {
+            "absolute z-99999 top-12 bg-opacity-95 left-0 right-10 h-fit w-full  ":
+              isMobile,
+          }
+        )}
+      >
         <CommandInput
           placeholder="Search..."
-          className="outline-none boarder-none focus:border-none focus:outline-none ring-0 "
+          className="outline-none boarder-none focus:border-none focus:outline-none ring-0  "
           onValueChange={(text) => {
             setInput(text);
             debounceRequest();
@@ -77,11 +90,20 @@ const SearchBar: FC<searchbarProps> = ({}) => {
                     value={question.title}
                     key={question.id}
                   >
-                    <div className="flex container my-1">
-                      <a href={`/questions/${question.id}`}>{question.title}</a>
-                      <Badge variant="default" className="w-fit">
-                        {question.tags}
-                      </Badge>
+                    <div className="flex container my-1 flex-col border-b py-1">
+                      <Link
+                        href={`/questions/${question.id}`}
+                        className="text-blue-500 text-sm md:text-lg "
+                      >
+                        {question.title}
+                      </Link>
+                      <div className="flex gap-3 flex-auto ">
+                        {question.tags.split(",").map((tag) => (
+                          <Badge variant="default" className="w-fit ">
+                            {tag}
+                          </Badge>
+                        ))}
+                      </div>
                     </div>
                   </CommandItem>
                 ))}

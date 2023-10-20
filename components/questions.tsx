@@ -51,7 +51,7 @@ const Questions: FC<questionsProps> = ({ questionType, ...props }) => {
           <hr className="my-1" />
           <div
             key={value.id}
-            className="flex md:flex-row flex-col justify-center md:items-start md:pr-10 gap-3"
+            className="flex md:flex-row flex-col justify-center md:items-start md:pr-10 gap-3 py-1"
           >
             <div className="flex md:flex-col flex-row text-zinc-300 md:w-24 w-fit  md:text-sm text-xs gap-1 items-center px-2">
               <span className="text-zinc-800">
