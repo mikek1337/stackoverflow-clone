@@ -36,7 +36,7 @@ const Questions: FC<questionsProps> = ({ questionType, ...props }) => {
     },
   });
 
-  if (isLoading) return <Loading />;
+  if (isLoading) return <Loading  />;
   return (
     <div className="md:container">
       {data?.length === 0 ? (
@@ -110,7 +110,7 @@ const Questions: FC<questionsProps> = ({ questionType, ...props }) => {
                     height="10"
                     className="w-[30px] h-[30px] rounded-md object-cover"
                   />
-                  <span className="text-xs">{value.user.username}</span>
+                  <Link href={`/users/${value.user.id}`}><span className="text-xs">{value.user.username}</span></Link>
                 </div>
                 <div>
                   <span className="text-xs text-zinc-400">
