@@ -23,8 +23,8 @@ const page = async () => {
         <SearchBar />
         <div className="grid md:grid-cols-4 grid-cols-2 mt-2">
           {result.map((user) => (
-            <Link href={`/users/${user.id}`}>
-            <div key={user.id} className="flex gap-1">
+            <Link href={`/users/${user.id}`} key={user.id}>
+            <div  className="flex gap-1">
               <div className="relative">
                 <div className="w-28 h-28 object-cover group-[more]:hover:opacity-100">
                   <Image
