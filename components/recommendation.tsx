@@ -41,7 +41,7 @@ export const Recommendation:FC<RecommendationProps> = ({id})=>{
                                 <div className="flex flex-wrap justify-start items-center gap-2">
                             {
                                 question.tags.split(',').map((tag)=>(
-                                    <Badge className="w-fit" id={tag}>{tag}</Badge>
+                                    <Badge className="w-fit" key={tag}>{tag}</Badge>
                                 ))
                             }
                                 </div>
