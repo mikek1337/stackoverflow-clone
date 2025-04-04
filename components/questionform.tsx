@@ -204,7 +204,7 @@ const QuestionForm = () => {
             Add up to 5 tags to describe what your question is about.
           </span>
           <div className="md:w-[811px] mt-3 ">
-            <div className="border-2 overflow-hidden my-6  grid grid-cols-3 gap-1">
+            <div className="border-2 overflow-hidden my-6 flex flex-wrap gap-2 ">
               {tags.map((tag, index) => (
                 <Badge
                   variant="default"
