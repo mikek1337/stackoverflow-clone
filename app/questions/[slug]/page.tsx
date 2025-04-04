@@ -65,7 +65,7 @@ export default async function Page({ params }: { params: { slug: string } }) {
     <div>
      
     <Suspense fallback={<ProgressBar>Please wait!</ProgressBar>}>
-      <div className="flex flex-row px-10">
+      <div className="flex flex-row ">
         <div className="md:container ">
           <div className="w-full">
             <div className="flex flex-col">
