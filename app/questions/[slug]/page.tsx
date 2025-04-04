@@ -156,7 +156,7 @@ export default async function Page({ params }: { params: { slug: string } }) {
             </div>
           </div>
         </div>
-        <Recommendation id={data?.id}/>
+        <Recommendation id={data?.id || ""}/>
       </div>
     </Suspense>
           
