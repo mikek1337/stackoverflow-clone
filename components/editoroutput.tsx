@@ -19,6 +19,7 @@ interface EditorOutputProps {
 const renderers = {
   image: CustomImageRenderer,
   code: CustomCodeRenderer,
+  link: CustomLinkRenderer
 };
 
 const style = {
@@ -27,7 +28,7 @@ const style = {
     lineHeight: "1.25rem",
   },
   link: {
-    width: "100px",
+    width: "50px",
   },
 };
 

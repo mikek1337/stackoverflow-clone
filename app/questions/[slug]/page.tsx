@@ -16,6 +16,7 @@ import { buttonVariants } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Progress } from "@/components/ui/progress";
 import ProgressBar from "@/components/progress";
+import { Recommendation } from "@/components/recommendation";
 
 export default async function Page({ params }: { params: { slug: string } }) {
   const session = await getAuthSession();
@@ -61,9 +62,11 @@ export default async function Page({ params }: { params: { slug: string } }) {
       return acc;
     }, 0) || 0;
   return (
+    <div>
+     
     <Suspense fallback={<ProgressBar>Please wait!</ProgressBar>}>
-      <div className="flex flex-row">
-        <div className="md:container">
+      <div className="flex flex-row px-10">
+        <div className="md:container ">
           <div className="w-full">
             <div className="flex flex-col">
               <div className="flex md:flex-row flex-col md:items-center md:justify-between mt-2 ">
@@ -153,7 +156,10 @@ export default async function Page({ params }: { params: { slug: string } }) {
             </div>
           </div>
         </div>
+        <Recommendation id={data?.id}/>
       </div>
     </Suspense>
+          
+    </div>
   );
 }
