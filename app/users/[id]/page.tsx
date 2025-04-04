@@ -33,14 +33,15 @@ export default async function Page({params}:{params:{ id:string}}){
     <div className="flex gap-4 my-4">
         <div className="rounded-md aspect-square border w-fit h-fit">   
             <Image src={data?.image || ""} alt="Profile Pic" width={500} height={700} className="rounded-md w-[500px] h-[400px] object-cover"/>
-            <div className="flex flex-col">
-                <span>Email: {data?.email}</span>
-                <span>Address: {data?.location}</span>
-            </div>
+            
         </div>
         <div>
-            <div>
+            <div className="flex justify-between">
                 <span className="font-semibold text-3xl">{data?.username}</span>
+                <div className="flex flex-col">
+                    <span>Email: <span className="text-sm font-semibold">{data?.email}</span></span>
+                    <span>Address: <span className="text-sm font-semibold">{data?.location}</span></span>
+            </div>
             </div>
             <hr className="my-4"/>
             <div className="max-w-[600px] my-5">
@@ -49,7 +50,7 @@ export default async function Page({params}:{params:{ id:string}}){
             <div className="text-center">
                 <h1 className="font-semibold text-2xl">Socials Contact</h1>
             </div>
-            <div className="grid grid-cols-3 items-center gap-2 my-10 justify-evenly">
+            <div className="flex flex-wrap items-center gap-2 my-10 justify-evenly">
                 {
                     data?.github !== null && (
                         <div className="flex items-center shadow-md hover:shadow-lg gap-2 border rounded-full w-fit px-5">
@@ -69,8 +70,8 @@ export default async function Page({params}:{params:{ id:string}}){
                 {
                     data?.linkden !== '' && (
                         <div className="flex items-center shadow-md  gap-2 border rounded-full w-fit p-1 px-5">
-                            <LinkedinIcon className="w-10 h-10 "/>
-                            <a href={data?.github || ""} target="_blank">Linkdin</a>
+                            <LinkedinIcon className="w-10 h-10  text-blue-700"/>
+                            <a href={data?.github || ""} target="_blank">Linkedin</a>
                         </div>
                     )
                 }
@@ -82,11 +83,11 @@ export default async function Page({params}:{params:{ id:string}}){
                 <div className="flex items-center gap-3">
                     <div className="rounded shadow-md p-4 flex flex-col gap-2">
                         <span className="font-bold text-xl">Asked</span>
-                        <span className="text-4xl font-bold text-center">{data?.questions.length}</span>
+                        <span className="text-4xl font-bold ">{data?.questions.length}</span>
                     </div>
                     <div className="rounded shadow-md p-4 flex flex-col">
                         <span className="font-semibold text-xl">Answered</span>
-                        <span className="text-4xl font-bold text-center">{data?.Answer.length}</span>
+                        <span className="text-4xl font-bold ">{data?.Answer.length}</span>
                     </div>
                 </div>
             </div>
