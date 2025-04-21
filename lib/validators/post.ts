@@ -13,6 +13,7 @@ export const PostValidator = z.object({
 export const AnswerPostValidator = z.object({
     content: z.any(),
     questionId: z.string(),
+    isAi:z.boolean().default(false).optional()
 });
 
 export const VotePostValidator = z.object({

@@ -9,12 +9,13 @@ export async function POST(req: Request) {
 
         if (session?.user) {
             const data = await req.json();
-            const { content, questionId } = AnswerPostValidator.parse(data);
+            const { content, questionId, isAi } = AnswerPostValidator.parse(data);
             await db.answer.create({
                 data: {
                     content: content,
                     questionId: questionId,
                     userId: session.user.id,
+                    isAi: isAi
                 }
             });
             return new Response("OK");
@@ -25,6 +26,6 @@ export async function POST(req: Request) {
         if (error instanceof z.ZodError)
             return new Response(error.message, { status: 400 });
 
-        return new Response("Something went wrong. Please try again later.", { status: 500 });
+        return new Response(error, { status: 500 });
     }
 }

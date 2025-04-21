@@ -1,5 +1,5 @@
 "use client";
-import { FC, useRef } from "react";
+import { FC, useEffect, useRef } from "react";
 import Editor from "./editor";
 import { Button } from "./ui/button";
 import { toast } from "@/hooks/use-toast";
@@ -16,7 +16,7 @@ interface answerformProps {
 const AnswerForm: FC<answerformProps> = ({ questionId }: answerformProps) => {
   const router = useRouter();
   const ref = useRef<EditorJS>();
-  const { mutate: postAnswer } = useMutation({
+  const { mutate: postAnswer, isSuccess, isError } = useMutation({
     mutationFn: async ({ content, questionId }: AnswerCreationRequest) => {
       const payload: AnswerCreationRequest = {
         content,
@@ -24,31 +24,26 @@ const AnswerForm: FC<answerformProps> = ({ questionId }: answerformProps) => {
       };
       const { data } = await axios.post("/api/answer/post", payload);
       return data;
-    },
-    onError: (err) => {
-      if (err instanceof AxiosError) {
-        toast({
-          title: "Something went wrong",
-          description: err.code,
-          variant: "destructive",
-        });
-      } else {
-        toast({
-          title: "Something went wrong",
-          description: "your question was not posted. Please try again.",
-          variant: "destructive",
-        });
-      }
-    },
-    onSuccess: () => {
+    }
+  });
+
+  useEffect(()=>{
+    if(isSuccess){
       toast({
         title: "Answer posted",
         variant: "default",
       });
       router.refresh();
       ref.current?.clear();
-    },
-  });
+    }
+    if(isError){
+        toast({
+          title: "Something went wrong",
+          description: "your answer was not posted. Please try again.",
+          variant: "destructive",
+        });
+    }
+  },[isSuccess, isError])
 
   const submitAnswer = async (e: any) => {
     const content = await ref.current?.save();

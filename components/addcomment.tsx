@@ -7,15 +7,20 @@ import axios from "axios";
 import { CommentPostValidator } from "@/lib/validators/post";
 import { toast } from "@/hooks/use-toast";
 import { redirect, useRouter } from "next/navigation";
+import useCommentReducer from "./commentprovider";
+import { Actions } from "@/store/comments-store";
+import { nanoid } from "nanoid";
 interface AddCommentProps {
   questionId: string;
   userId: string | "";
+  username:string;
 }
 
-const AddComment: FC<AddCommentProps> = ({ questionId, userId }) => {
+const AddComment: FC<AddCommentProps> = ({ questionId, userId, username }) => {
   const [hide, setHide] = useState<boolean>(true);
   const [comment, setComment] = useState<string>("");
   const router = useRouter();
+  const {dispatch} = useCommentReducer();
   const { mutate: postComment } = useMutation({
     mutationFn: async ({ comment, questionId }: CommentPostValidator) => {
       const payload: CommentPostValidator = { comment, questionId, userId };
@@ -45,6 +50,7 @@ const AddComment: FC<AddCommentProps> = ({ questionId, userId }) => {
         questionId: questionId,
         userId: userId,
       };
+      dispatch({type:Actions.ADD, payload:{comment:comment,id:nanoid(), postedDate:new Date(), user:{username:username}}})
       postComment(commentPost);
     }
   };

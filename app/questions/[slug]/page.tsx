@@ -1,70 +1,41 @@
-import SideMenu from "@/components/sidemenu";
+"use client"
+import {useState, useEffect} from 'react';
 import EditorOutput from "@/components/editoroutput";
 import { Badge } from "@/components/ui/badge";
 import { UserAvatar } from "@/components/useravatar";
 import { cn, formatTimeToNow } from "@/lib/utils";
-import { Suspense } from "react";
-import Loading from "@/app/loading";
 import PostAnswer from "@/components/postanswer";
 import PostVote from "@/components/postvote";
 import AddQuestion from "@/components/addquestion";
-import { db } from "@/lib/db";
-import { getAuthSession } from "@/lib/auth";
 import Comment from "@/components/comment";
-import Link from "next/link";
-import { buttonVariants } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
-import { Progress } from "@/components/ui/progress";
-import ProgressBar from "@/components/progress";
 import { Recommendation } from "@/components/recommendation";
+import { AskAi } from "@/components/ai/askAi";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
+import { useSession } from 'next-auth/react';
+import { QuestionWithCommentsAndVotes } from '@/types/questions';
+import { Skeleton } from '@/components/ui/skeleton';
 
-export default async function Page({ params }: { params: { slug: string } }) {
-  const session = await getAuthSession();
-  const data = await db.question.findUnique({
-    where: {
-      id: params.slug,
-    },
-    include: {
-      votes: true,
-      user: true,
-      QuestionComment: {
-        include: {
-          user: true,
-        },
-        orderBy: {
-          postedDate: "asc",
-        },
-      },
-      answers: {
-        include: {
-          user: true,
-          votes: true,
-          AnswerComment: {
-            include: {
-              user: true,
-            },
-            orderBy: {
-              postedDate: "asc",
-            },
-          },
-        },
-      },
-    },
+
+export default function Page({ params }: { params: { slug: string } }) {
+  
+   const session = useSession();
+  const {data, isLoading} = useQuery({
+    queryKey:["question"],
+    queryFn: async ()=>{
+      const res = await axios.get("/api/question?q="+params.slug);
+      return res.data as QuestionWithCommentsAndVotes
+    }
   });
-  let questionvoteAmt: number = 0;
-  let questioncurrentVote = data?.votes.find(
-    (vote) => vote.userId === session?.user.id
-  )?.type;
-  questionvoteAmt =
-    data?.votes.reduce((acc: number, vote) => {
-      if (vote.type === "DOWN") return acc - 1;
-      if (vote.type === "UP") return acc + 1;
-      return acc;
-    }, 0) || 0;
+
+    if(isLoading)
+      return(
+      <Skeleton className='w-full h-[500px] animate-pulse '/>
+      )
   return (
     <div>
      
-    <Suspense fallback={<ProgressBar>Please wait!</ProgressBar>}>
+    
       <div className="flex flex-row ">
         <div className="md:container ">
           <div className="w-full">
@@ -94,19 +65,21 @@ export default async function Page({ params }: { params: { slug: string } }) {
             <div className="my-3 flex">
               <div className="w-fit h-full">
                 <div>
+                  {
+                    data && 
                   <PostVote
-                    postId={data?.id || ""}
+                    postId={params.slug}
                     postedContent="question"
-                    initialVote={questioncurrentVote}
-                    initialVoteAmt={questionvoteAmt}
+                    initialVote={data?.votes?.find((vote)=>vote.userId===session?.data?.user.id)?.type} 
                   />
+                  }
                 </div>
               </div>
               <div className="md:w-full w-[300px]">
                 <EditorOutput content={data?.problemDetail} />
                 <EditorOutput content={data?.triedMethods} />
                 <div className="flex my-6 gap-2">
-                  {data?.tags.split(",").map((tag) => (
+                  {data?.tags?.split(",").map((tag) => (
                     <Badge
                       key={tag}
                       variant="outline"
@@ -118,6 +91,7 @@ export default async function Page({ params }: { params: { slug: string } }) {
                 </div>
               </div>
             </div>
+           
             <div className="md:w-full w-[300px]"></div>
             <div className="rounded-md bg-blue-100 w-fit float-right pr-5 pl-1">
               <span className="text-zinc-400 text-xs py-1">
@@ -126,39 +100,45 @@ export default async function Page({ params }: { params: { slug: string } }) {
                 {data?.postedDate && new Date(data.postedDate).toDateString()}
               </span>
               <div className="flex items-center gap-2 my-1">
-                <UserAvatar
+                {data && <UserAvatar
                   user={data?.user ?? { name: null, image: null }}
                   className="rounded-md w-[40px] h-[40px]"
-                />
-                <span className="text-xs">{data?.user.username}</span>
+                />}
+                
+                <span className="text-xs">{data?.user?.username}</span>
               </div>
             </div>
           </div>
           <div className="my-10">
-            <Comment
-              contentId={data?.id || ""}
+            {data && <Comment
+              contentId={params.slug}
               type="question"
-              comments={data?.QuestionComment || []}
-            />
+             
+            />}
+            
           </div>
+         <AskAi questionId={params.slug}/>
           <div>
             <div className="my-3 flex justify-between">
               <h2 className="text-zinc-600 text-xl">
-                {data?.answers.length} Answers
+               
               </h2>
             </div>
             <div>
-              <PostAnswer
+              {data &&  <PostAnswer
                 questionId={params.slug}
-                answerData={data?.answers || []}
-                isOwner={data?.user.id === session?.user.id}
-              />
+                isOwner={data?.user?.id === session?.data?.user.id}
+              />}
+              
             </div>
           </div>
         </div>
-        <Recommendation id={data?.id || ""}/>
+        {
+        data !== undefined && 
+        <Recommendation id={params.slug}/>
+        }
       </div>
-    </Suspense>
+    
           
     </div>
   );

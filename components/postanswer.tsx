@@ -1,3 +1,4 @@
+"use client"
 import { FC, Suspense } from "react";
 import Answer from "./answer";
 import { AnswerDetail } from "@/types/db";
@@ -8,28 +9,26 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "./ui/button";
-
+import {useSession} from "next-auth/react"
 interface PostAnswerProps {
   questionId: string;
-  answerData: AnswerDetail[];
   isOwner: boolean;
 }
 
-const PostAnswer: FC<PostAnswerProps> = async ({
+const PostAnswer: FC<PostAnswerProps> =  ({
   questionId,
-  answerData,
   isOwner,
 }: PostAnswerProps) => {
-  const session = await getAuthSession();
+  const session =  useSession();
   return (
-    <Suspense fallback={<Loading />}>
+    <>
       <Answer
         questionOwner={isOwner}
-        data={answerData || []}
-        userId={session?.user.id || ""}
+        questionId={questionId}
+        userId={session?.data?.user.id || ""}
       />
-      {session?.user && <AnswerForm questionId={questionId} />}
-      {!session?.user && (
+      {session?.data?.user && <AnswerForm questionId={questionId} />}
+      {!session?.data?.user && (
         <Link
           className={cn(buttonVariants({ variant: "default" }), "w-fit mb-4")}
           href="/login"
@@ -37,7 +36,7 @@ const PostAnswer: FC<PostAnswerProps> = async ({
           Login to answer
         </Link>
       )}
-    </Suspense>
+    </>
   );
 };
 

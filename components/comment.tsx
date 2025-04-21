@@ -1,71 +1,68 @@
+"use client"
 import Loading from "@/app/loading";
 import { db } from "@/lib/db";
 import { formatTimeToNow } from "@/lib/utils";
-import { FC, Suspense } from "react";
+import { FC, Suspense, useEffect, useState } from "react";
 import AddComment from "./addcomment";
 import AddAnswerComment from "./addanswercomment";
 import { getAuthSession } from "@/lib/auth";
+import { useSession } from "next-auth/react";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
+import { AnswerCommentWithUser, CommentState, QuestionCommentWithUser } from "@/types/comment";
+import RenderComment from "./rendercomment";
+import { CommentProvider } from "./commentprovider";
+import { Skeleton } from "./ui/skeleton";
 interface CommentProps {
   contentId: string;
   type: "question" | "answer";
-  comments: any[];
+ 
 }
-const Comment: FC<CommentProps> = async ({
+const Comment: FC<CommentProps> = ({
   contentId,
   type,
-  comments,
 }: CommentProps) => {
-  /* let comments: any[] = []; */
-  const session = await getAuthSession();
-  /* const session = await getAuthSession();
-  if (type === "question") {
-    comments = await db.questionComment.findMany({
-      where: {
-        questionId: contentId,
-      },
-      include: {
-        user: true,
-      },
-      orderBy: {
-        postedDate: "asc",
-      },
-    });
-  } else if (type === "answer") {
-    comments = await db.answerComment.findMany({
-      where: {
-        answerId: contentId,
-      },
-      include: {
-        user: true,
-      },
-      orderBy: {
-        postedDate: "asc",
-      },
-    }); */
-
+  const session = useSession();
+  const [currentComments, setCurrentComments] = useState<any[]>([]);
+  const {data, isLoading} = useQuery({
+    queryKey:[contentId],
+    queryFn:async()=>{
+      const res = await axios.get(`/api/comment?contentId=${contentId}&contentType=${type}`);
+      return res.data as CommentState[]
+    }
+  })
+  useEffect(()=>{
+    if(data){
+      setCurrentComments(data);
+    }
+  },[data])
   return (
-    <Suspense fallback={<Loading />}>
-      {comments.map((comment) => (
-        <div key={comment.id} className="text-xs ">
-          <hr className="my-2" />
-          <p className="w-full pl-10">
-            {comment.comment}
-            {" - "}
-            {comment.user.username}{" "}
-            {formatTimeToNow(new Date(comment.postedDate))}
-          </p>
-        </div>
-      ))}
-      {type === "question" && (
-        <AddComment questionId={contentId} userId={session?.user.id || ""} />
-      )}
-      {type === "answer" && (
-        <AddAnswerComment
-          answerId={contentId}
-          userId={session?.user.id || ""}
-        />
-      )}
-    </Suspense>
+    <>
+    {isLoading && (
+      <div>
+        <Skeleton className="w-full h-20 animate-pulse rounded-md"/>
+        <Skeleton className="w-full h-20 animate-pulse rounded-md"/>
+        <Skeleton className="w-full h-20 animate-pulse rounded-md"/>
+        <Skeleton className="w-full h-20 animate-pulse rounded-md"/>
+      </div>
+    )}
+    {data && 
+      <CommentProvider initalState={data || []}>
+        <RenderComment/>
+        {type === "question" && (
+          <AddComment questionId={contentId} userId={session?.data?.user.id || ""} username={session.data?.user.username || session.data?.user.name || ""} />
+        )}
+        {type === "answer" && (
+          <AddAnswerComment
+            username={session.data?.user.username || session.data?.user.name || ""}
+            answerId={contentId}
+            userId={session?.data?.user.id || ""}
+          />
+        )}
+        </CommentProvider>
+    
+    }
+    </>
   );
 };
 

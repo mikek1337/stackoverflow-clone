@@ -4,25 +4,42 @@ import { FC, useEffect, useState } from "react";
 import { Button } from "./ui/button";
 import { ArrowBigDown, ArrowBigUp } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { VotePostValidator } from "@/lib/validators/post";
+import { Skeleton } from "./ui/skeleton";
 
 interface postvoteProps {
-  postId: string;
-  initialVoteAmt: number;
+  postId: string | undefined;
   initialVote: VoteType | undefined;
   postedContent: string;
 }
 
 const PostVote: FC<postvoteProps> = ({
   postId,
-  initialVoteAmt,
   initialVote,
   postedContent,
 }: postvoteProps) => {
-  const [currentVote, setCurrentVote] = useState(initialVote);
-  const [vote, setVote] = useState(initialVoteAmt);
+  const [currentVote, setCurrentVote] = useState<VoteType | undefined>();
+  const [vote, setVote] = useState(0);
+  const {data, isLoading} = useQuery({
+      queryKey:["vote", postId, postedContent],
+      queryFn: async ()=>{
+        const res = await axios.get(`/api/vote/count?q=${postedContent}&postId=${postId}`);
+        return res.data as {vote:number, userVote:{type:VoteType}};
+      }
+  })
+
+  useEffect(()=>{
+    if(data){
+      setVote(data?.vote)
+      setCurrentVote(data?.userVote?.type);
+    }
+   
+  },[data])
+ 
+  
+
   const { mutate: postVote } = useMutation({
     mutationKey: ["vote"],
     mutationFn: async ({ questionId, voteType }: VotePostValidator) => {
@@ -48,13 +65,24 @@ const PostVote: FC<postvoteProps> = ({
   const voteAction = (voteType: VoteType) => {
     if (currentVote != voteType) {
       const payload: VotePostValidator = {
-        questionId: postId,
+        questionId: postId || "",
         voteType: voteType,
       };
       if (voteType == "DOWN") {
-        setVote((prev) => prev - 1);
+          if(vote == 1)
+          {
+            setVote(-1);
+          }
+          else{
+            setVote((prev) => prev - 1);
+          }
       } else {
-        setVote((perv) => perv + 1);
+        if(vote == -1){
+          setVote(1);
+        }
+        else{
+          setVote((perv) => perv + 1);
+        }
       }
       setCurrentVote(voteType);
       postVote(payload);
@@ -71,15 +99,17 @@ const PostVote: FC<postvoteProps> = ({
           voteAction("UP");
         }}
       >
-        <ArrowBigUp
+        {isLoading?<Skeleton className="w-10 h-10 animate-pulse rounded-md"/>: (<ArrowBigUp
           className={cn("h-5 w-5 text-zinc-700", {
             "text-emerald-500 fill-emerald-500": currentVote === "UP",
           })}
-        />
+        />)}
+        
       </Button>
-      <p className="text-center py-2 font-medium text-sm text-zinc-900">
-        {vote}
-      </p>
+      <div className="text-center py-2 font-medium text-sm text-zinc-900">
+        {isLoading?<Skeleton className="w-10 h-10 animate-pulse rounded-md"/>: vote}
+        
+      </div>
       <Button
         size="sm"
         variant="ghost"
@@ -88,11 +118,12 @@ const PostVote: FC<postvoteProps> = ({
           voteAction("DOWN");
         }}
       >
-        <ArrowBigDown
+        {isLoading?<Skeleton className="w-10 h-10 animate-pulse rounded-md"/>: (<ArrowBigDown
           className={cn("h-5 w-5 text-zinc-700", {
             "text-emerald-500 fill-emerald-500": currentVote === "DOWN",
           })}
-        />
+        />)}
+        
       </Button>
     </div>
   );
