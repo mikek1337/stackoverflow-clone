@@ -25,7 +25,7 @@ export function UserAvatar({ user, ...props }: UserAvatarProps) {
           />
         </svg>
       </AvatarFallback>
-      <Image src={user.image || ""} alt={user.name || ""} fill />
+      <AvatarImage src={user.image || ""} alt={user.name || ""}/>
     </Avatar>
   );
 }

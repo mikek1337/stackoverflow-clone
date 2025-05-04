@@ -9,12 +9,18 @@ import { useMutation } from "@tanstack/react-query";
 import EditorJS from "@editorjs/editorjs";
 import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
+import useAnswerReducer from "./answerprovider";
+import { nanoid } from "nanoid";
+import { useSession } from "next-auth/react";
+import { Actions } from "@/store/answers-store";
 interface answerformProps {
   questionId: string;
 }
 
 const AnswerForm: FC<answerformProps> = ({ questionId }: answerformProps) => {
   const router = useRouter();
+  const {dispatch} = useAnswerReducer();
+  const session = useSession();
   const ref = useRef<EditorJS>();
   const { mutate: postAnswer, isSuccess, isError } = useMutation({
     mutationFn: async ({ content, questionId }: AnswerCreationRequest) => {
@@ -37,6 +43,7 @@ const AnswerForm: FC<answerformProps> = ({ questionId }: answerformProps) => {
       ref.current?.clear();
     }
     if(isError){
+      
         toast({
           title: "Something went wrong",
           description: "your answer was not posted. Please try again.",
@@ -47,6 +54,7 @@ const AnswerForm: FC<answerformProps> = ({ questionId }: answerformProps) => {
 
   const submitAnswer = async (e: any) => {
     const content = await ref.current?.save();
+    dispatch({type:Actions.ADD, payload:{content:content,id:nanoid(),isAi:false,isAnswer:false,postedDate:new Date().toString(),user:{username:session.data?.user.username || "", image:session.data?.user.image || ""}, votes:[]}})
     if (content) {
       const payload: AnswerCreationRequest = {
         content: content,
